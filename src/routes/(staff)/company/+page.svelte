@@ -3,6 +3,8 @@
 	import axios from 'axios';
 	import request from '../../../utils/request';
 
+
+
 	let companyName: string | null = '';
 	let companyCode: string | null = '';
 	let companyAddress: string | null = '';
@@ -53,6 +55,7 @@
 			loading = false;
 		}
 	});
+
 </script>
 
 {#if loading}

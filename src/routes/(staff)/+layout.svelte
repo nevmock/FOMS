@@ -4,6 +4,7 @@
 	import { FaSolidChartPie,FaSolidBuilding,FaSolidMoneyBill1Wave  } from "svelte-icons-pack/fa";
 	import { RiOthersHandbagFill } from "svelte-icons-pack/ri";
 	import { BsPersonFill,BsPeopleFill } from "svelte-icons-pack/bs";
+	import { base } from '$app/paths';
 
 	import { page } from '$app/stores';
 
@@ -46,37 +47,37 @@
    <div class="h-full px-3 pb-4 overflow-y-auto bg-white ">
 		<ul class="space-y-2 font-medium">
 			<li>
-				<a href="/dashboard" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/dashboard') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
+				<a href="{base}/dashboard" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/dashboard') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
 					<Icon src={FaSolidChartPie} className="w-5 h-5" />
 					<span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
 				</a>
 			</li>
 			<li>
-				<a href="/company" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/company') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
+				<a href="{base}/company" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/company') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
 					<Icon src={FaSolidBuilding} className="w-5 h-5" />
 					<span class="flex-1 ms-3 whitespace-nowrap">Company</span>
 				</a>
 			</li>
 			<li>
-				<a href="/position" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/position') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
+				<a href="{base}/position" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/position') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
 					<Icon src={RiOthersHandbagFill} className="w-5 h-5" />
 					<span class="flex-1 ms-3 whitespace-nowrap">Position</span>
 				</a>
 			</li>
 			<li>
-				<a href="/employee" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/employee') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
+				<a href="{base}/employee" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/employee') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
 					<Icon src={BsPersonFill} className="w-5 h-5" />
 					<span class="flex-1 ms-3 whitespace-nowrap">Employee</span>
 				</a>
 			</li>
 			<li>
-				<a href="/salary" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/salary') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
+				<a href="{base}/salary" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/salary') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
 					<Icon src={FaSolidMoneyBill1Wave} className="w-5 h-5" />
 					<span class="flex-1 ms-3 whitespace-nowrap">Salary</span>
 				</a>
 			</li>
 			<li>
-				<a href="/user" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/user') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
+				<a href="{base}/user" class={`flex items-center p-2 rounded-lg group ${path.startsWith('/user') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}>
 					<Icon src={BsPeopleFill} className="w-5 h-5" />
 					<span class="flex-1 ms-3 whitespace-nowrap">User</span>
 				</a>
