@@ -5,23 +5,31 @@
 
 	const dispatch = createEventDispatcher();
 
-	let company: { label: string; value: number } | null = null;
-	let levelPosition: { label: string; value: number } | null = null;
-	let officerPosition: { label: string; value: number } | null = null;
-	let basicSalary: number | null = null;
-	let formatBasicSalary: string | null = null;
+	let company: { label: string; value: string } | null = null;
+	let levelPosition: { label: string; value: string } | null = null;
+	let officerPosition: { label: string; value: string } | null = null;
+	let nipEmployee: string | null = null;
+	let nameEmployee: string | null = null;
+	let tmtEmployee: Date | null = null;
+	let gender: { label: string; value: string } | null = null;
+	let whatsappEmployee: string | null = null;
+	let emailEmployee: string | null = null;
 
 	let filterTextLevelPosition = '';
 	let filterTextOfficerPosition = '';
 
+	let listGender: Array<{ value: string | number; label: string; created?: boolean }> = [
+		{ value: 'Pria', label: ' Pria' },
+		{ value: 'Wanita', label: ' Wanita' }
+	];
 	let listCompanies: Array<{ value: string | number; label: string; created?: boolean }> = [
-		{ value: 1, label: 'Company 1' }
+		{ value: 'company 1', label: 'Company 1' }
 	];
 	let listLevelPositions: Array<{ value: string | number; label: string; created?: boolean }> = [
-		{ value: 1, label: 'Level 1' }
+		{ value: 'level 1', label: 'Level 1' }
 	];
 	let listOfficerPositions: Array<{ value: string | number; label: string; created?: boolean }> = [
-		{ value: 1, label: 'Officer 1' }
+		{ value: 'officer 1', label: 'Officer 1' }
 	];
 
 	function handleFilterLevelPosition(e: CustomEvent) {
@@ -53,32 +61,22 @@
 	function handleChangeOfficerPosition(e: CustomEvent) {
 		listOfficerPositions = listOfficerPositions.filter((i) => !i.created);
 	}
-
-	function handleInput(event: Event) {
-		const input = event.target as HTMLInputElement;
-		let value = input.value.replace(/[^\d]/g, ''); // Remove all non-digit characters
-
-		basicSalary = parseInt(value || '0', 10);
-		formatBasicSalary = basicSalary ? `${basicSalary.toLocaleString('id-ID')}` : '';
-	}
-
-	$: console.log(company, levelPosition, officerPosition, basicSalary);
 </script>
 
 <div class="flex flex-col gap-2">
 	<Breadcrumbs />
-	<h1 class="text-3xl text-gray-900 font-semibold">Create Position</h1>
+	<h1 class="text-3xl text-gray-900 font-semibold">Create Employee</h1>
 </div>
 
 <div class="h-7"></div>
 
-<div class="border-2 border-gray-200 rounded-lg grid grid-cols-1 divide-y">
+<div class="bg-white border-2 border-gray-200 rounded-lg grid grid-cols-1 divide-y">
 	<div class="p-4">
-		<h2 class="block text-base font-semibold text-gray-900">Position Profile</h2>
-		<p class="text-sm text-gray-400">Put the Position Profile details in</p>
+		<h2 class="block text-base font-semibold text-gray-900">Employee Profile</h2>
+		<p class="text-sm text-gray-400">Put the Employee Profile details in</p>
 	</div>
 	<form class="p-4">
-		<div class="grid gap-6 mb-6 md:grid-cols-2">
+		<div class="grid gap-6 mb-6 md:grid-cols-3">
 			<div>
 				<label for="company" class="block mb-2 text-sm font-medium text-gray-900">Company</label>
 				<Select
@@ -133,26 +131,80 @@
 				</Select>
 			</div>
 			<div>
-				<label for="basicSalary" class="block mb-2 text-sm font-medium text-gray-900"
-					>Basic Salary</label
+				<label for="nipEmployee" class="block mb-2 text-sm font-medium text-gray-900"
+					>NIP employee</label
 				>
-				<div class="relative">
-					<div
-						class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none"
-					>
-						<h1 class="text-gray-500">Rp</h1>
-					</div>
-					<input
-						type="text"
-						id="basicSalary"
-						name="basicSalary"
-						class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block w-full ps-10 p-2.5"
-						bind:value={formatBasicSalary}
-						on:input={handleInput}
-						placeholder="0"
-						required
-					/>
-				</div>
+				<input
+					type="text"
+					id="nipEmployee"
+					name="nipEmployee"
+					class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block w-full p-2.5"
+					bind:value={nipEmployee}
+					required
+				/>
+			</div>
+			<div>
+				<label for="nameEmployee" class="block mb-2 text-sm font-medium text-gray-900"
+					>Name employee</label
+				>
+				<input
+					type="text"
+					id="nameEmployee"
+					name="nameEmployee"
+					class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block w-full p-2.5"
+					bind:value={nameEmployee}
+					required
+				/>
+			</div>
+			<div>
+				<label for="tmtEmployee" class="block mb-2 text-sm font-medium text-gray-900"
+					>TMT employee</label
+				>
+				<input
+					type="date"
+					id="tmtEmployee"
+					name="tmtEmployee"
+					class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block w-full p-2.5"
+					bind:value={tmtEmployee}
+					required
+				/>
+			</div>
+			<div>
+				<label for="gender" class="block mb-2 text-sm font-medium text-gray-900">Gender</label>
+				<Select
+					id="gender"
+					name="gender"
+					items={listGender}
+					bind:value={gender}
+					placeholder="Select an option"
+					class="foo bar"
+				/>
+			</div>
+			<div>
+				<label for="whatsappEmployee" class="block mb-2 text-sm font-medium text-gray-900"
+					>Whatsapp employee</label
+				>
+				<input
+					type="text"
+					id="whatsappEmployee"
+					name="whatsappEmployee"
+					class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block w-full p-2.5"
+					bind:value={whatsappEmployee}
+					required
+				/>
+			</div>
+			<div>
+				<label for="emailEmployee" class="block mb-2 text-sm font-medium text-gray-900"
+					>Email employee</label
+				>
+				<input
+					type="email"
+					id="emailEmployee"
+					name="emailEmployee"
+					class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block w-full p-2.5"
+					bind:value={emailEmployee}
+					required
+				/>
 			</div>
 		</div>
 		<button
