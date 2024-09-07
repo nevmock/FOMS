@@ -5,8 +5,6 @@
 	let email: string = '';
 	let emailVerified: Date;
 	let password: string = '';
-
-	console.log('first');
 </script>
 
 <div class="flex flex-col gap-2">

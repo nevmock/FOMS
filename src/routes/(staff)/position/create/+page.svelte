@@ -61,8 +61,6 @@
 		basicSalary = parseInt(value || '0', 10);
 		formatBasicSalary = basicSalary ? `${basicSalary.toLocaleString('id-ID')}` : '';
 	}
-
-	$: console.log(company, levelPosition, officerPosition, basicSalary);
 </script>
 
 <div class="flex flex-col gap-2">

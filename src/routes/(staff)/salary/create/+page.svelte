@@ -162,8 +162,6 @@
 	}
 
 	$: subTotalSalary = basicSalary + subTotalAllowance - subTotalDeduction;
-
-	$: console.log();
 </script>
 
 <div class="flex flex-col gap-2">
