@@ -52,7 +52,7 @@
 		<div class="grid gap-6 mb-6 md:grid-cols-2">
 			<div>
 				<label for="company_name" class="block mb-2 text-sm font-medium text-gray-900"
-					>Company name</label
+					>Company name <span class="text-red-500">*</span></label
 				>
 				<input
 					type="text"
@@ -66,7 +66,7 @@
 			</div>
 			<div>
 				<label for="company_code" class="block mb-2 text-sm font-medium text-gray-900"
-					>Company code</label
+					>Company code<span class="text-red-500">*</span></label
 				>
 				<input
 					type="text"
@@ -80,7 +80,7 @@
 			</div>
 			<div>
 				<label for="company_address" class="block mb-2 text-sm font-medium text-gray-900"
-					>Company address</label
+					>Company address<span class="text-red-500">*</span></label
 				>
 				<input
 					type="text"
@@ -94,7 +94,7 @@
 			</div>
 			<div>
 				<label for="company_logo" class="block mb-2 text-sm font-medium text-gray-900"
-					>Company logo</label
+					>Company logo<span class="text-red-500">*</span></label
 				>
 				<div class="flex items-center justify-center w-full">
 					<label
