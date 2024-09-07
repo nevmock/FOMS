@@ -12,14 +12,10 @@
 			);
 			sellerDatas = response.data;
 		} catch (error) {
-			console.error('Error fetching seller data:', error);
 		} finally {
 			loading = false;
-			console.log('Loading status:', loading);
 		}
 	});
-
-	$: console.log('Data outside onMount:', sellerDatas);
 </script>
 
 {#if loading}

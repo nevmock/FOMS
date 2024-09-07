@@ -76,9 +76,11 @@
 		<p class="text-sm text-gray-400">Put the Employee Profile details in</p>
 	</div>
 	<form class="p-4">
-		<div class="grid gap-6 mb-6 md:grid-cols-3">
+		<div class="grid gap-6 mb-6 lg:grid-cols-3 md:grid-cols-2">
 			<div>
-				<label for="company" class="block mb-2 text-sm font-medium text-gray-900">Company</label>
+				<label for="company" class="block mb-2 text-sm font-medium text-gray-900"
+					>Company<span class="text-red-500">*</span></label
+				>
 				<Select
 					id="company"
 					name="company"
@@ -90,7 +92,7 @@
 			</div>
 			<div>
 				<label for="levelPosition" class="block mb-2 text-sm font-medium text-gray-900"
-					>Level position</label
+					>Level position<span class="text-red-500">*</span></label
 				>
 				<Select
 					id="levelPosition"
@@ -111,7 +113,7 @@
 			</div>
 			<div>
 				<label for="officerPosition" class="block mb-2 text-sm font-medium text-gray-900"
-					>Officer position</label
+					>Officer position<span class="text-red-500">*</span></label
 				>
 				<Select
 					id="officerPosition"
@@ -132,7 +134,7 @@
 			</div>
 			<div>
 				<label for="nipEmployee" class="block mb-2 text-sm font-medium text-gray-900"
-					>NIP employee</label
+					>NIP employee<span class="text-red-500">*</span></label
 				>
 				<input
 					type="text"
@@ -145,7 +147,7 @@
 			</div>
 			<div>
 				<label for="nameEmployee" class="block mb-2 text-sm font-medium text-gray-900"
-					>Name employee</label
+					>Name employee<span class="text-red-500">*</span></label
 				>
 				<input
 					type="text"
@@ -158,7 +160,7 @@
 			</div>
 			<div>
 				<label for="tmtEmployee" class="block mb-2 text-sm font-medium text-gray-900"
-					>TMT employee</label
+					>TMT employee<span class="text-red-500">*</span></label
 				>
 				<input
 					type="date"
@@ -170,7 +172,9 @@
 				/>
 			</div>
 			<div>
-				<label for="gender" class="block mb-2 text-sm font-medium text-gray-900">Gender</label>
+				<label for="gender" class="block mb-2 text-sm font-medium text-gray-900"
+					>Gender<span class="text-red-500">*</span></label
+				>
 				<Select
 					id="gender"
 					name="gender"
@@ -182,7 +186,7 @@
 			</div>
 			<div>
 				<label for="whatsappEmployee" class="block mb-2 text-sm font-medium text-gray-900"
-					>Whatsapp employee</label
+					>Whatsapp employee<span class="text-red-500">*</span></label
 				>
 				<input
 					type="text"
@@ -195,7 +199,7 @@
 			</div>
 			<div>
 				<label for="emailEmployee" class="block mb-2 text-sm font-medium text-gray-900"
-					>Email employee</label
+					>Email employee<span class="text-red-500">*</span></label
 				>
 				<input
 					type="email"

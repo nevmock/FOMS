@@ -162,8 +162,6 @@
 	}
 
 	$: subTotalSalary = basicSalary + subTotalAllowance - subTotalDeduction;
-
-	$: console.log();
 </script>
 
 <div class="flex flex-col gap-2">
@@ -183,7 +181,7 @@
 			<div class="grid gap-6 mb-6 lg:grid-cols-3 md:grid-cols-2">
 				<div>
 					<label for="employeeName" class="block mb-2 text-sm font-medium text-gray-900"
-						>Employee name</label
+						>Employee name<span class="text-red-500">*</span></label
 					>
 					<Select
 						id="employeeName"
@@ -196,7 +194,7 @@
 				</div>
 				<div>
 					<label for="companyName" class="block mb-2 text-sm font-medium text-gray-900"
-						>Company name</label
+						>Company name<span class="text-red-500">*</span></label
 					>
 					<input
 						type="text"
@@ -210,7 +208,7 @@
 
 				<div>
 					<label for="employeeNip" class="block mb-2 text-sm font-medium text-gray-900"
-						>Employee nip</label
+						>Employee nip<span class="text-red-500">*</span></label
 					>
 					<input
 						type="text"
@@ -223,7 +221,9 @@
 				</div>
 
 				<div>
-					<label for="tmt" class="block mb-2 text-sm font-medium text-gray-900">TMT</label>
+					<label for="tmt" class="block mb-2 text-sm font-medium text-gray-900"
+						>TMT<span class="text-red-500">*</span></label
+					>
 					<input
 						type="text"
 						id="tmt"
@@ -235,7 +235,7 @@
 				</div>
 				<div>
 					<label for="levelPosition" class="block mb-2 text-sm font-medium text-gray-900"
-						>Level position</label
+						>Level position<span class="text-red-500">*</span></label
 					>
 					<input
 						type="text"
@@ -248,7 +248,7 @@
 				</div>
 				<div>
 					<label for="officerPosition" class="block mb-2 text-sm font-medium text-gray-900"
-						>Officer position</label
+						>Officer position<span class="text-red-500">*</span></label
 					>
 					<input
 						type="text"
@@ -271,7 +271,7 @@
 		<div class="p-4">
 			<div class="mb-6">
 				<label for="monthPicker" class="block mb-2 text-sm font-medium text-gray-900"
-					>Month's salary</label
+					>Month's salary<span class="text-red-500">*</span></label
 				>
 				<input
 					id="monthPicker"
@@ -284,7 +284,7 @@
 			</div>
 			<div class="mb-6">
 				<label for="basicSalary" class="block mb-2 text-sm font-medium text-gray-900"
-					>Basic Salary</label
+					>Basic Salary<span class="text-red-500">*</span></label
 				>
 				<div class="relative">
 					<div
@@ -395,23 +395,22 @@
 												>
 													<div class="p-2 grid grid-cols-2">
 														<div class="flex justify-start items-center">
-															<button
-																class="text-gray-500"
-																on:click={() => handleDeleteAllowance(index)}
-															>
+															<button type="button" class="text-gray-500">
 																<Icon src={CgSwapVertical} className="w-8 h-8 " />
 															</button>
 														</div>
 
 														<div class="flex justify-end items-center gap-3">
 															<button
-																class="text-red-500"
+																type="button"
+																class="text-red-500 cursor-pointer"
 																on:click={() => handleDeleteAllowance(index)}
 															>
 																<Icon src={BsTrashFill} className="w-5 h-5 " />
 															</button>
 															<button
-																class="text-gray-500"
+																type="button"
+																class="text-gray-500 cursor-pointer"
 																on:click={() => handleToggleDetailsAllowance(index)}
 															>
 																{#if allowance.showDetails}
@@ -664,7 +663,7 @@
 			<div class="grid gap-6 mb-6 md:grid-cols-2">
 				<div>
 					<label for="subTotalAllowance" class="block mb-2 text-sm font-medium text-gray-900"
-						>A. Sub total allowance</label
+						>A. Sub total allowance<span class="text-red-500">*</span></label
 					>
 					<div class="relative">
 						<div
@@ -685,7 +684,7 @@
 				</div>
 				<div>
 					<label for="subTotalDeduction" class="block mb-2 text-sm font-medium text-gray-900"
-						>B. Sub total deduction</label
+						>B. Sub total deduction<span class="text-red-500">*</span></label
 					>
 					<div class="relative">
 						<div
