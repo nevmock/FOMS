@@ -80,7 +80,9 @@
 	<form class="p-4">
 		<div class="grid gap-6 mb-6 md:grid-cols-2">
 			<div>
-				<label for="company" class="block mb-2 text-sm font-medium text-gray-900">Company</label>
+				<label for="company" class="block mb-2 text-sm font-medium text-gray-900"
+					>Company<span class="text-red-500">*</span></label
+				>
 				<Select
 					id="company"
 					name="company"
@@ -92,7 +94,7 @@
 			</div>
 			<div>
 				<label for="levelPosition" class="block mb-2 text-sm font-medium text-gray-900"
-					>Level position</label
+					>Level position<span class="text-red-500">*</span></label
 				>
 				<Select
 					id="levelPosition"
@@ -113,7 +115,7 @@
 			</div>
 			<div>
 				<label for="officerPosition" class="block mb-2 text-sm font-medium text-gray-900"
-					>Officer position</label
+					>Officer position<span class="text-red-500">*</span></label
 				>
 				<Select
 					id="officerPosition"
@@ -134,7 +136,7 @@
 			</div>
 			<div>
 				<label for="basicSalary" class="block mb-2 text-sm font-medium text-gray-900"
-					>Basic Salary</label
+					>Basic Salary<span class="text-red-500">*</span></label
 				>
 				<div class="relative">
 					<div
