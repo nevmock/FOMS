@@ -1,16 +1,16 @@
 <script lang="ts">
 	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
 	let loading = true;
-	let companies: Array<{ logo: string; name: string; address: string; code: string }> = [];
+	let positions: Array<{ company: string; level: string; officer: string; salary: number }> = [];
 
 	// Simulate data fetching
 	setTimeout(() => {
-		companies = [
+		positions = [
 			{
-				logo: 'https://glints.com/id/lowongan/wp-content/uploads/2020/08/logo4.png',
-				name: 'Adidas',
-				address: 'Jl. Gatot Subroto No.289, Cibangkong, Kec. Batununggal, Kota Bandung',
-				code: '40273'
+				company: 'Adidas',
+				level: 'Senior Manager',
+				officer: 'Chief Financial Officer (CFO)',
+				salary: 1000000
 			}
 		];
 		loading = false;
@@ -23,7 +23,7 @@
 <div class="h-4"></div>
 <div class="border-2 border-gray-200 bg-white rounded-lg grid grid-cols-1 divide-y">
 	<div class="p-4 flex justify-between">
-		<h2 class="block text-base font-semibold text-gray-900">Company list</h2>
+		<h2 class="block text-base font-semibold text-gray-900">Position list</h2>
 	</div>
 	<div class="p-4">
 		<div class="relative overflow-x-auto sm:rounded-lg">
@@ -58,10 +58,10 @@
 					/>
 				</div>
 				<a
-					href="/company/create"
+					href="/position/create"
 					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full inline-flex items-center gap-2 sm:w-auto px-5 py-2.5 text-center"
 				>
-					Create company
+					Create position
 				</a>
 			</div>
 
@@ -79,29 +79,28 @@
 						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
 						></path>
 					</svg>
-					<span class="ml-2 text-gray-700">Loading companies...</span>
+					<span class="ml-2 text-gray-700">Loading positions...</span>
 				</div>
 			{:else}
 				<table class="w-full text-sm text-left rtl:text-right text-gray-500">
 					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 						<tr>
-							<th scope="col" class="px-6 py-3">Logo</th>
-							<th scope="col" class="px-6 py-3">Name</th>
-							<th scope="col" class="px-6 py-3">Address</th>
-							<th scope="col" class="px-6 py-3">Code</th>
+							<th scope="col" class="px-6 py-3">Company</th>
+							<th scope="col" class="px-6 py-3">Level position</th>
+							<th scope="col" class="px-6 py-3">Officer position</th>
+							<th scope="col" class="px-6 py-3">Salary</th>
 							<th scope="col" class="px-6 py-3">Action</th>
 						</tr>
 					</thead>
 					<tbody>
-						{#each companies as company}
+						{#each positions as position}
 							<tr class="bg-white border-b">
 								<th class="px-6 py-4">
-									<img class="w-10 h-10 object-cover" src={company.logo} alt={company.name} />
+									{position.company}
 								</th>
-								<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{company.name}</th
-								>
-								<td class="px-6 py-4">{company.address}</td>
-								<td class="px-6 py-4">{company.code}</td>
+								<td class="px-6 py-4">{position.level}</td>
+								<td class="px-6 py-4">{position.officer}</td>
+								<td class="px-6 py-4">Rp.{position.salary.toLocaleString('id-ID')}</td>
 								<td class="px-6 py-4 inline-flex items-center gap-2">
 									<a
 										href="/company/edit"
@@ -130,28 +129,28 @@
 					<ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
 						<li>
 							<a
-								href="/company"
+								href="/position"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
 								>Previous</a
 							>
 						</li>
 						<li>
 							<a
-								href="/company"
+								href="/position"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
 								>1</a
 							>
 						</li>
 						<li>
 							<a
-								href="/company"
+								href="/position"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
 								>2</a
 							>
 						</li>
 						<li>
 							<a
-								href="/company"
+								href="/position"
 								aria-current="page"
 								class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
 								>3</a
@@ -159,14 +158,14 @@
 						</li>
 						<li>
 							<a
-								href="/company"
+								href="/position"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
 								>4</a
 							>
 						</li>
 						<li>
 							<a
-								href="/company"
+								href="/position"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
 								>Next</a
 							>
