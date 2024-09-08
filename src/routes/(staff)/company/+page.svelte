@@ -109,12 +109,12 @@
 									>
 										Edit
 									</a>
-									<a
-										href="/company/delete"
+									<button
+										type="button"
 										class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
 									>
 										Delete
-									</a>
+									</button>
 								</td>
 							</tr>
 						{/each}
@@ -130,28 +130,28 @@
 					<ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
 						<li>
 							<a
-								href="/comapany"
+								href="/company"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
 								>Previous</a
 							>
 						</li>
 						<li>
 							<a
-								href="/comapany"
+								href="/company"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
 								>1</a
 							>
 						</li>
 						<li>
 							<a
-								href="/comapany"
+								href="/company"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
 								>2</a
 							>
 						</li>
 						<li>
 							<a
-								href="/comapany"
+								href="/company"
 								aria-current="page"
 								class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
 								>3</a
@@ -159,14 +159,14 @@
 						</li>
 						<li>
 							<a
-								href="/comapany"
+								href="/company"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
 								>4</a
 							>
 						</li>
 						<li>
 							<a
-								href="/comapany"
+								href="/company"
 								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
 								>Next</a
 							>
