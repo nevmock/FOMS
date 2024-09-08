@@ -85,7 +85,7 @@
 				<table class="w-full text-sm text-left rtl:text-right text-gray-500">
 					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 						<tr>
-							<th scope="col" class="px-6 py-3">Compoany</th>
+							<th scope="col" class="px-6 py-3">Company</th>
 							<th scope="col" class="px-6 py-3">Level position</th>
 							<th scope="col" class="px-6 py-3">Officer position</th>
 							<th scope="col" class="px-6 py-3">Salary</th>
