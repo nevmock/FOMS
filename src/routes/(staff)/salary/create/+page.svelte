@@ -573,19 +573,21 @@
 												>
 													<div class="p-2 grid grid-cols-2">
 														<div class="flex justify-start items-center">
-															<button class="text-gray-500">
+															<button class="text-gray-500" type="button">
 																<Icon src={CgSwapVertical} className="w-8 h-8 " />
 															</button>
 														</div>
 
 														<div class="flex justify-end items-center gap-3">
 															<button
+																type="button"
 																class="text-red-500"
 																on:click={() => handleDeleteDeduction(index)}
 															>
 																<Icon src={BsTrashFill} className="w-5 h-5 " />
 															</button>
 															<button
+																type="button"
 																class="text-gray-500"
 																on:click={() => handleToggleDetailsDeduction(index)}
 															>
