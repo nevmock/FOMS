@@ -2,13 +2,30 @@
 	import { onMount } from 'svelte';
 	import Breadcrumbs from '../../../../components/Breadcrumbs.svelte';
 
-	let companyName: string | null = 'Adidas';
-	let companyCode: string | null = '208972';
-	let companyAddress: string | null =
-		'Jl. Gatot Subroto No.289, Cibangkong, Kec. Batununggal, Kota Bandung';
+	let companyName: string | null = '';
+	let companyCode: string | null = '';
+	let companyAddress: string | null = '';
 	let companyLogo: File | null = null;
-	let previewUrl: string | null =
-		'https://glints.com/id/lowongan/wp-content/uploads/2020/08/logo4.png';
+	let previewUrl: string | null = '';
+	let isLoading: boolean = true;
+
+	// Fungsi simulasi pemuatan data
+	function loadData() {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				companyName = 'Adidas';
+				companyCode = '208972';
+				companyAddress = 'Jl. Gatot Subroto No.289, Cibangkong, Kec. Batununggal, Kota Bandung';
+				previewUrl = 'https://glints.com/id/lowongan/wp-content/uploads/2020/08/logo4.png';
+				resolve(true);
+			}, 2000); // Simulasi waktu pemuatan data 2 detik
+		});
+	}
+
+	onMount(async () => {
+		await loadData(); // Menunggu data dimuat
+		isLoading = false; // Menyembunyikan indikator loading setelah data dimuat
+	});
 
 	function handleFileSelect(e: Event): void {
 		const target = e.target as HTMLInputElement;
@@ -55,112 +72,125 @@
 		<h2 class="block text-base font-semibold text-gray-900">Company Profile</h2>
 		<p class="text-sm text-gray-400">Put the Company Profile details in</p>
 	</div>
-	<form class="p-4">
-		<div class="grid gap-6 mb-6 md:grid-cols-2">
-			<div>
-				<label for="company_name" class="block mb-2 text-sm font-medium text-gray-900"
-					>Company name <span class="text-red-500">*</span></label
-				>
-				<input
-					type="text"
-					id="company_name"
-					name="companyName"
-					class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-					placeholder="Company Name "
-					bind:value={companyName}
-					required
-				/>
-			</div>
-			<div>
-				<label for="company_code" class="block mb-2 text-sm font-medium text-gray-900"
-					>Company code<span class="text-red-500">*</span></label
-				>
-				<input
-					type="text"
-					id="company_code"
-					name="companyCode"
-					class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-					placeholder="Compoany Code"
-					bind:value={companyCode}
-					required
-				/>
-			</div>
-			<div>
-				<label for="company_address" class="block mb-2 text-sm font-medium text-gray-900"
-					>Company address<span class="text-red-500">*</span></label
-				>
-				<input
-					type="text"
-					id="company_address"
-					name="companyAddress"
-					class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-					placeholder="Company Address"
-					bind:value={companyAddress}
-					required
-				/>
-			</div>
-			<div>
-				<label for="company_logo" class="block mb-2 text-sm font-medium text-gray-900"
-					>Company logo<span class="text-red-500">*</span></label
-				>
-				<div class="flex items-center justify-center w-full">
-					<label
-						for="company_logo"
-						class="flex flex-col items-center justify-center w-full h-32 border-[1.5px] border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-						on:drop={handleDrop}
-						on:dragover={handleDragOver}
-					>
-						{#if previewUrl}
-							<div class="relative">
-								<img src={previewUrl} alt="Preview" class=" object-contain w-[100px] h-[100px]" />
-								<button
-									type="button"
-									on:click={cancelImage}
-									class="text-red-700 bg-white border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-5 h-5 flex justify-center items-center absolute -top-1 -right-1"
-								>
-									x
-								</button>
-							</div>
-						{:else}
-							<div class="flex flex-col items-center justify-center pt-5 pb-6">
-								<svg
-									class="w-8 h-8 mb-4 text-gray-500"
-									aria-hidden="true"
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 20 16"
-								>
-									<path
-										stroke="currentColor"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-									/>
-								</svg>
-								<p class="mb-2 text-sm text-gray-500">
-									<span class="font-semibold">Click to upload</span> or drag and drop
-								</p>
-								<p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (Ratio 1:1)</p>
-							</div>
-							<input
-								id="company_logo"
-								name="companyLogo"
-								type="file"
-								accept="image/*"
-								class="hidden"
-								on:change={handleFileSelect}
-							/>
-						{/if}
-					</label>
-				</div>
+	{#if isLoading}
+		<!-- Menampilkan loading indikator saat data sedang dimuat -->
+		<div class="flex items-center justify-center min-h-[50vh]">
+			<div class="text-center">
+				<div
+					class="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"
+					role="status"
+				></div>
+				<p class="text-gray-500 mt-4">Loading data...</p>
 			</div>
 		</div>
+	{:else}
+		<form class="p-4">
+			<div class="grid gap-6 mb-6 md:grid-cols-2">
+				<div>
+					<label for="company_name" class="block mb-2 text-sm font-medium text-gray-900"
+						>Company name <span class="text-red-500">*</span></label
+					>
+					<input
+						type="text"
+						id="company_name"
+						name="companyName"
+						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+						placeholder="Company Name "
+						bind:value={companyName}
+						required
+					/>
+				</div>
+				<div>
+					<label for="company_code" class="block mb-2 text-sm font-medium text-gray-900"
+						>Company code<span class="text-red-500">*</span></label
+					>
+					<input
+						type="text"
+						id="company_code"
+						name="companyCode"
+						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+						placeholder="Compoany Code"
+						bind:value={companyCode}
+						required
+					/>
+				</div>
+				<div>
+					<label for="company_address" class="block mb-2 text-sm font-medium text-gray-900"
+						>Company address<span class="text-red-500">*</span></label
+					>
+					<input
+						type="text"
+						id="company_address"
+						name="companyAddress"
+						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+						placeholder="Company Address"
+						bind:value={companyAddress}
+						required
+					/>
+				</div>
+				<div>
+					<label for="company_logo" class="block mb-2 text-sm font-medium text-gray-900"
+						>Company logo<span class="text-red-500">*</span></label
+					>
+					<div class="flex items-center justify-center w-full">
+						<label
+							for="company_logo"
+							class="flex flex-col items-center justify-center w-full h-32 border-[1.5px] border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+							on:drop={handleDrop}
+							on:dragover={handleDragOver}
+						>
+							{#if previewUrl}
+								<div class="relative">
+									<img src={previewUrl} alt="Preview" class=" object-contain w-[100px] h-[100px]" />
+									<button
+										type="button"
+										on:click={cancelImage}
+										class="text-red-700 bg-white border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-5 h-5 flex justify-center items-center absolute -top-1 -right-1"
+									>
+										x
+									</button>
+								</div>
+							{:else}
+								<div class="flex flex-col items-center justify-center pt-5 pb-6">
+									<svg
+										class="w-8 h-8 mb-4 text-gray-500"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 20 16"
+									>
+										<path
+											stroke="currentColor"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+										/>
+									</svg>
+									<p class="mb-2 text-sm text-gray-500">
+										<span class="font-semibold">Click to upload</span> or drag and drop
+									</p>
+									<p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (Ratio 1:1)</p>
+								</div>
+								<input
+									id="company_logo"
+									name="companyLogo"
+									type="file"
+									accept="image/*"
+									class="hidden"
+									on:change={handleFileSelect}
+								/>
+							{/if}
+						</label>
+					</div>
+				</div>
+			</div>
 
-		<button
-			type="submit"
-			class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-			>Edit</button
-		>
-	</form>
+			<button
+				type="submit"
+				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+				>Edit</button
+			>
+		</form>
+	{/if}
 </div>
