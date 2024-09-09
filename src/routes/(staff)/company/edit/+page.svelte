@@ -67,21 +67,25 @@
 	<h1 class="text-3xl text-gray-900 font-semibold">Edit Company</h1>
 </div>
 <div class="h-7"></div>
-<div class="border-2 border-gray-200 rounded-lg grid grid-cols-1 divide-y">
+<div class="border-2 bg-white border-gray-200 rounded-lg grid grid-cols-1 divide-y">
 	<div class="p-4">
 		<h2 class="block text-base font-semibold text-gray-900">Company Profile</h2>
 		<p class="text-sm text-gray-400">Put the Company Profile details in</p>
 	</div>
 	{#if isLoading}
-		<!-- Menampilkan loading indikator saat data sedang dimuat -->
-		<div class="flex items-center justify-center min-h-[50vh]">
-			<div class="text-center">
-				<div
-					class="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"
-					role="status"
-				></div>
-				<p class="text-gray-500 mt-4">Loading data...</p>
-			</div>
+		<div class="flex justify-center items-center py-10">
+			<svg
+				class="animate-spin h-8 w-8 text-blue-700"
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+			>
+				<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+				></circle>
+				<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
+				></path>
+			</svg>
+			<span class="ml-2 text-gray-700">Loading companies...</span>
 		</div>
 	{:else}
 		<form class="p-4">
@@ -94,7 +98,7 @@
 						type="text"
 						id="company_name"
 						name="companyName"
-						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+						class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 						placeholder="Company Name "
 						bind:value={companyName}
 						required
@@ -108,7 +112,7 @@
 						type="text"
 						id="company_code"
 						name="companyCode"
-						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+						class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 						placeholder="Compoany Code"
 						bind:value={companyCode}
 						required
@@ -122,7 +126,7 @@
 						type="text"
 						id="company_address"
 						name="companyAddress"
-						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+						class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 						placeholder="Company Address"
 						bind:value={companyAddress}
 						required
@@ -135,7 +139,7 @@
 					<div class="flex items-center justify-center w-full">
 						<label
 							for="company_logo"
-							class="flex flex-col items-center justify-center w-full h-32 border-[1.5px] border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+							class="flex flex-col items-center justify-center w-full h-32 border-[1.5px] border-gray-300 rounded-lg cursor-pointer bg-white"
 							on:drop={handleDrop}
 							on:dragover={handleDragOver}
 						>
