@@ -91,7 +91,7 @@
 					<span class="ml-2 text-gray-700">Loading salaries...</span>
 				</div>
 			{:else}
-				<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+				<div class="relative overflow-x-auto sm:rounded-lg">
 					<table class="table-auto w-full text-sm text-left rtl:text-right text-gray-500">
 						<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 							<tr>
