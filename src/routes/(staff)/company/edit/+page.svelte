@@ -85,7 +85,7 @@
 				<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
 				></path>
 			</svg>
-			<span class="ml-2 text-gray-700">Loading companies...</span>
+			<span class="ml-2 text-gray-700">Loading...</span>
 		</div>
 	{:else}
 		<form class="p-4">
