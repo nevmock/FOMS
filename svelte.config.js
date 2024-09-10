@@ -14,7 +14,13 @@ const config = {
 		}) : autoAdapter(),
 		paths: {
 			base: process.env.BASE_PATH
-		}
+		},
+		csrf: {
+			checkOrigin: false,
+		},
+		alias: {
+			"$api": "./src/routes/api/",
+		},
 	},
 	preprocess: vitePreprocess()
 };
