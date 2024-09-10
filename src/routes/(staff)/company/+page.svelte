@@ -1,177 +1,179 @@
-<script script lang="ts">
-	import { onMount } from 'svelte';
-	import axios from 'axios';
-	import request from '../../../utils/request';
-
-
-
-	let companyName: string | null = '';
-	let companyCode: string | null = '';
-	let companyAddress: string | null = '';
-	let companyLogo: File | null = null;
-	let previewUrl: string | null = null;
-
-	function handleFileSelect(e: Event): void {
-		const target = e.target as HTMLInputElement;
-		if (target.files && target.files.length > 0) {
-			companyLogo = target.files[0];
-			previewUrl = URL.createObjectURL(companyLogo);
-		}
-	}
-
-	function handleDrop(e: DragEvent): void {
-		e.preventDefault();
-		if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
-			companyLogo = e.dataTransfer.files[0];
-			previewUrl = URL.createObjectURL(companyLogo);
-			e.dataTransfer.clearData();
-		}
-	}
-
-	function handleDragOver(e: DragEvent): void {
-		e.preventDefault();
-	}
-
-	onMount(() => {
-		return () => {
-			if (previewUrl) {
-				URL.revokeObjectURL(previewUrl);
-			}
-		};
-	});
-
-	let sellerDatas: Array<{ name: string; id: string }> = [];
+<script lang="ts">
+	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
 	let loading = true;
+	let companies: Array<{ logo: string; name: string; address: string; code: string }> = [];
 
-	onMount(async () => {
-		try {
-			const response = await request.get(
-				`https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`
-			);
-			sellerDatas = response.data;
-		} catch (error) {
-			console.error('Error fetching seller data:', error);
-		} finally {
-			loading = false;
-		}
-	});
-
+	// Simulate data fetching
+	setTimeout(() => {
+		companies = [
+			{
+				logo: 'https://glints.com/id/lowongan/wp-content/uploads/2020/08/logo4.png',
+				name: 'Adidas',
+				address: 'Jl. Gatot Subroto No.289, Cibangkong, Kec. Batununggal, Kota Bandung',
+				code: '40273'
+			}
+		];
+		loading = false;
+	}, 2000); // Simulate a 2-second delay to fetch data
 </script>
 
-{#if loading}
-	<h1>Loading</h1>
-{:else}
-	<div class="border-2 border-gray-200 rounded-lg grid grid-cols-1 divide-y">
-		<div class="p-4">
-			<h2 class="block text-base font-semibold text-gray-900">Company Profile</h2>
-			<p class="text-sm text-gray-400">Put the Company Profile details in</p>
-		</div>
-		<form class="p-4">
-			<div class="grid gap-6 mb-6 md:grid-cols-2">
-				<div>
-					<label for="company_name" class="block mb-2 text-sm font-medium text-gray-900"
-						>Company name</label
+<div class="border-2 border-gray-200 bg-white rounded-lg px-2 py-3">
+	<Breadcrumbs />
+</div>
+<div class="h-4"></div>
+<div class="border-2 border-gray-200 bg-white rounded-lg grid grid-cols-1 divide-y">
+	<div class="p-4 flex justify-between">
+		<h2 class="block text-base font-semibold text-gray-900">Company list</h2>
+	</div>
+	<div class="p-4">
+		<div class="relative overflow-x-auto sm:rounded-lg">
+			<div class="pb-4 bg-white flex justify-between items-center">
+				<div class="relative">
+					<div
+						class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none"
 					>
-					<input
-						type="text"
-						id="company_name"
-						name="companyName"
-						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-						placeholder="Company Name "
-						bind:value={companyName}
-						required
-					/>
-				</div>
-				<div>
-					<label for="company_code" class="block mb-2 text-sm font-medium text-gray-900"
-						>Company code</label
-					>
-					<input
-						type="text"
-						id="company_code"
-						name="companyCode"
-						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-						placeholder="Compoany Code"
-						bind:value={companyCode}
-						required
-					/>
-				</div>
-				<div>
-					<label for="company_address" class="block mb-2 text-sm font-medium text-gray-900"
-						>Company address</label
-					>
-					<input
-						type="text"
-						id="company_address"
-						name="companyAddress"
-						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-						placeholder="Company Address"
-						bind:value={companyAddress}
-						required
-					/>
-				</div>
-				<div>
-					<label for="company_logo" class="block mb-2 text-sm font-medium text-gray-900"
-						>Company logo</label
-					>
-					<div class="flex items-center justify-center w-full">
-						<label
-							for="company_logo"
-							class="flex flex-col items-center justify-center w-full h-32 border-[1.5px] border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-							on:drop={handleDrop}
-							on:dragover={handleDragOver}
+						<svg
+							class="w-4 h-4 text-gray-500"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 20 20"
 						>
-							{#if previewUrl}
-								<div>
-									<img src={previewUrl} alt="Preview" class=" object-contain w-[100px] h-[100px]" />
-								</div>
-							{:else}
-								<div class="flex flex-col items-center justify-center pt-5 pb-6">
-									<svg
-										class="w-8 h-8 mb-4 text-gray-500"
-										aria-hidden="true"
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 20 16"
-									>
-										<path
-											stroke="currentColor"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-										/>
-									</svg>
-									<p class="mb-2 text-sm text-gray-500">
-										<span class="font-semibold">Click to upload</span> or drag and drop
-									</p>
-									<p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (Ratio 1:1)</p>
-								</div>
-								<input
-									id="company_logo"
-									name="companyLogo"
-									type="file"
-									accept="image/*"
-									class="hidden"
-									on:change={handleFileSelect}
-								/>
-							{/if}
-						</label>
+							<path
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+							/>
+						</svg>
 					</div>
+					<input
+						type="text"
+						id="basicSalary"
+						name="basicSalary"
+						class="w-80 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block ps-10 p-2.5"
+						placeholder="Search for companies"
+						required
+					/>
 				</div>
+				<a
+					href="/company/create"
+					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full inline-flex items-center gap-2 sm:w-auto px-5 py-2.5 text-center"
+				>
+					Create company
+				</a>
 			</div>
 
-			<button
-				type="submit"
-				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-				>Create</button
-			>
-		</form>
+			<!-- Loading spinner -->
+			{#if loading}
+				<div class="flex justify-center items-center py-10">
+					<svg
+						class="animate-spin h-8 w-8 text-blue-700"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+					>
+						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+						></circle>
+						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
+						></path>
+					</svg>
+					<span class="ml-2 text-gray-700">Loading companies...</span>
+				</div>
+			{:else}
+				<table class="w-full text-sm text-left rtl:text-right text-gray-500">
+					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+						<tr>
+							<th scope="col" class="px-6 py-3">Logo</th>
+							<th scope="col" class="px-6 py-3">Name</th>
+							<th scope="col" class="px-6 py-3">Address</th>
+							<th scope="col" class="px-6 py-3">Code</th>
+							<th scope="col" class="px-6 py-3">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each companies as company}
+							<tr class="bg-white border-b">
+								<th class="px-6 py-4">
+									<img class="w-10 h-10 object-cover" src={company.logo} alt={company.name} />
+								</th>
+								<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{company.name}</th
+								>
+								<td class="px-6 py-4">{company.address}</td>
+								<td class="px-6 py-4">{company.code}</td>
+								<td class="px-6 py-4 inline-flex items-center gap-2">
+									<a
+										href="/company/edit"
+										class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+									>
+										Edit
+									</a>
+									<button
+										type="button"
+										class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+									>
+										Delete
+									</button>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			{/if}
+			{#if !loading}
+				<nav class="flex items-center justify-between pt-4" aria-label="Table navigation">
+					<span class="text-sm font-normal text-gray-500"
+						>Showing <span class="font-semibold text-gray-900">1-10</span> of
+						<span class="font-semibold text-gray-900">1000</span></span
+					>
+					<ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+						<li>
+							<a
+								href="/company"
+								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
+								>Previous</a
+							>
+						</li>
+						<li>
+							<a
+								href="/company"
+								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+								>1</a
+							>
+						</li>
+						<li>
+							<a
+								href="/company"
+								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+								>2</a
+							>
+						</li>
+						<li>
+							<a
+								href="/company"
+								aria-current="page"
+								class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
+								>3</a
+							>
+						</li>
+						<li>
+							<a
+								href="/company"
+								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+								>4</a
+							>
+						</li>
+						<li>
+							<a
+								href="/company"
+								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
+								>Next</a
+							>
+						</li>
+					</ul>
+				</nav>
+			{/if}
+		</div>
 	</div>
-
-	<!-- <ul>
-		{#each sellerDatas as province}
-			<li>{province.name} | {province.id}</li>
-		{/each}
-	</ul> -->
-{/if}
+</div>

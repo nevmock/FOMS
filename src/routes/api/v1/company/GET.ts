@@ -25,9 +25,10 @@ const Output = z.object({
 	code: z.number(),
 	status: z.string(),
 	recordsTotal: z.number().optional(),
-	data: z.array(CompanySchema), // saya ingin data bertipe array of Company
+	data: z.array(CompanySchema).nullable().optional(),
 	error: z.any()
-});
+})
+
 
 const Error = {
 	404: error(404, "Post not found"),
@@ -35,18 +36,16 @@ const Error = {
 };
 
 const _services = new CompanyService();
-export default new Endpoint({ Query, Output }).handle(async (param: any) => {
+export default new Endpoint({ Query, Output }).handle(async (param) => {
 	const payload = await param as OurPayload;
 	const records = await _services.getAll(payload);
 
-	console.info(records)
-
-	const response = records != null ?Output.parse(composeResponse(records)) : composeResponse(records)
+	const response = records != null ? Output.parse(composeResponse(records)) as OurResponse<Array<Company> | null> : composeResponse(records) as OurResponse<Array<Company> | null>
 
 	return new Response(JSON.stringify(response), {
 		status: 200,
 		headers: {
 			'Content-Type': 'application/json',
 		},
-	}) as OurResponse<Array<Company> | null>;
+	}) as z.infer<typeof Output>;
 });

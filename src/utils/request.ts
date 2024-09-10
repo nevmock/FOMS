@@ -44,7 +44,6 @@ const errorHandler = (error: AxiosError): AxiosError => {
 		expiredTokenHandler();
 	} else if (error.code === 'ERR_NETWORK') {
 		// window.history.pushState({}, 'Redirect Network Error', '/auth');
-		console.log(error);
 		if (error.response?.status === 401) {
 			expiredTokenHandler();
 		}
