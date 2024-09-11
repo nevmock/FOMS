@@ -1,10 +1,31 @@
-import { API } from "sveltekit-api";
+import { API } from 'sveltekit-api';
+import 'dotenv/config';
 
-export default new API(import.meta.glob("./**/*.ts"), {
-	openapi: "3.0.0",
+export default new API(import.meta.glob('./**/*.ts'), {
+	openapi: '3.0.0',
 	info: {
-		title: "Simple Post API",
-		version: "1.0.0",
-		description: "An example API etsss",
+		title: 'Docs-FOCUSON API',
+		version: '1.0.0',
+		description: 'Restfull API for Docs-FOCUSON'
 	},
+	servers: [
+		{
+			url: 'https://dev-foms.netlify.app/',
+			description: 'For DEV Server',
+			variables: {
+				// ['author']: {
+				// 	default: 'nevmock'
+				// }
+			}
+		},
+		{
+			url: 'http://localhost:5173/',
+			description: 'For Local Server',
+			variables: {
+				// ['author']: {
+				// 	default: 'nevmock'
+				// }
+			}
+		}
+	]
 });
