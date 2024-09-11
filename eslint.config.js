@@ -17,9 +17,6 @@ export default [
 				...globals.browser,
 				...globals.node
 			}
-		},
-		linterOptions: {
-			reportUnusedDisableDirectives: true,
 		}
 	},
 	{
@@ -35,5 +32,13 @@ export default [
 	},
 	{
 		ignores: ['build/', '.svelte-kit/', 'dist/']
+	},
+	{
+		linterOptions: {
+			reportUnusedDisableDirectives: true
+		},
+		rules: {
+			'@typescript-eslint/no-explicit-any': 'off'
+		}
 	}
 ];
