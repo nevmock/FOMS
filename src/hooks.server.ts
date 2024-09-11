@@ -11,8 +11,9 @@ export const handle = async ({ event, resolve }) => {
 	}
 };
 
-export const handleError: ({ error }: { error }) => OurResponse<any> = ({ error }): OurResponse<any> => {
-
+export const handleError: ({ error }: { error }) => OurResponse<typeof error> = ({
+	error
+}): OurResponse<typeof error> => {
 	if (error instanceof Prisma.PrismaClientKnownRequestError) {
 		return {
 			code: StatusCodes.INTERNAL_SERVER_ERROR,
@@ -33,7 +34,7 @@ export const handleError: ({ error }: { error }) => OurResponse<any> = ({ error 
 				recordsTotal: 0,
 				data: null,
 				error: {
-					message: 'Invalid Signature',
+					message: 'Invalid Signature'
 				}
 			};
 		} else {
@@ -43,7 +44,7 @@ export const handleError: ({ error }: { error }) => OurResponse<any> = ({ error 
 				recordsTotal: 0,
 				data: null,
 				error: {
-					message: 'Token Is Invalid Or No Longer Valid',
+					message: 'Token Is Invalid Or No Longer Valid'
 				}
 			};
 		}
@@ -106,7 +107,7 @@ export const handleError: ({ error }: { error }) => OurResponse<any> = ({ error 
 		recordsTotal: 0,
 		data: null,
 		error: {
-			message: error.message || 'Internal Server Error',
+			message: error.message || 'Internal Server Error'
 		}
 	};
 };
