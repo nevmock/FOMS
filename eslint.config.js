@@ -17,6 +17,9 @@ export default [
 				...globals.browser,
 				...globals.node
 			}
+		},
+		linterOptions: {
+			reportUnusedDisableDirectives: true,
 		}
 	},
 	{
@@ -26,6 +29,9 @@ export default [
 				parser: ts.parser
 			}
 		}
+	},
+	{
+		files: ["**/*.ts"],
 	},
 	{
 		ignores: ['build/', '.svelte-kit/', 'dist/']
