@@ -46,7 +46,7 @@
 					/>
 					<span
 						class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-gray-800"
-						>NevMock</span
+						>Docs-FOCUSON</span
 					>
 				</a>
 			</div>
