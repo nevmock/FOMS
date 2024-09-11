@@ -25,6 +25,7 @@ model User {
   role        Role            @default(USER)
   created_at  DateTime?        @default(now())
   updated_at  DateTime?
+  @@map("user")
 }
 
 model Employee {
@@ -40,6 +41,7 @@ model Employee {
   gender      Gender
   created_at        DateTime?           @default(now())
   updated_at        DateTime?
+  @@map("employee")
 }
 
 model Company {
@@ -52,6 +54,7 @@ model Company {
   positions         Position[]
   created_at        DateTime?           @default(now())
   updated_at        DateTime?
+  @@map("company")
 }
 
 model Position {
@@ -64,6 +67,7 @@ model Position {
   employees     Employee[]
   created_at        DateTime?           @default(now())
   updated_at        DateTime?
+  @@map("position")
 }
 
 model Salary {
@@ -81,6 +85,7 @@ model Salary {
   other_deduction     String    @db.MediumText
   created_at        DateTime?           @default(now())
   updated_at        DateTime?
+  @@map("salary")
 }
 
 enum Gender {
