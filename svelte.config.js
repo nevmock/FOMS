@@ -1,5 +1,4 @@
 import autoAdapter from '@sveltejs/adapter-auto';
-// import staticAdapter from '@sveltejs/adapter-static';
 import netlifyAdapter from '@sveltejs/adapter-netlify';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 /** @type {import('@sveltejs/kit').Config} */
@@ -30,11 +29,12 @@ const config = {
 			base: process.env.BASE_PATH
 		},
 		csrf: {
-			checkOrigin: false,
+			checkOrigin: false
 		},
 		alias: {
-			"$api": "./src/routes/api/",
-		},
+			$api: './src/routes/api/',
+			$lib: './src/lib/'
+		}
 	},
 	preprocess: vitePreprocess()
 };
