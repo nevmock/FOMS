@@ -5,10 +5,12 @@ import axios, {
 	type InternalAxiosRequestConfig
 } from 'axios';
 import Cookies from 'js-cookie';
+import { PUBLIC_BASE_URL } from '$env/static/public';
+
+console.log(PUBLIC_BASE_URL);
 
 const request = axios.create({
-	// baseURL: `${process.env.REACT_APP_API_URL}/api/`,
-	baseURL: '',
+	baseURL: `${PUBLIC_BASE_URL}/api/`,
 	timeout: 30000,
 	headers: {
 		'Content-Type': 'application/json'
@@ -70,7 +72,7 @@ export default {
 
 	post: (
 		url: string,
-		data: Record<string, string | number | boolean>,
+		data: { [key: string]: string | number | boolean | File },
 		headers: AxiosRequestConfig['headers'] = {}
 	): Promise<AxiosResponse> => request({ method: 'post', url, data, headers }),
 
@@ -80,8 +82,10 @@ export default {
 		headers: AxiosRequestConfig['headers']
 	): Promise<AxiosResponse> => request({ method: 'put', url, data, headers }),
 
-	delete: (url: string, data?: Record<string, string | number | boolean>): Promise<AxiosResponse> =>
-		request({ method: 'delete', url, data }),
+	delete: (
+		url: string,
+		data?: Record<string, string | number | boolean>
+	): Promise<AxiosResponse> => request({ method: 'delete', url, data }),
 
 	setToken: (token?: string) => {
 		if (token) {

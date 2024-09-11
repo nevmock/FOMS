@@ -74,9 +74,18 @@
 						fill="none"
 						viewBox="0 0 24 24"
 					>
-						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+						<circle
+							class="opacity-25"
+							cx="12"
+							cy="12"
+							r="10"
+							stroke="currentColor"
+							stroke-width="4"
 						></circle>
-						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
+						<path
+							class="opacity-75"
+							fill="currentColor"
+							d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
 						></path>
 					</svg>
 					<span class="ml-2 text-gray-700">Loading companies...</span>
@@ -96,9 +105,14 @@
 						{#each companies as company}
 							<tr class="bg-white border-b">
 								<th class="px-6 py-4">
-									<img class="w-10 h-10 object-cover" src={company.logo} alt={company.name} />
+									<img
+										class="w-10 h-10 object-cover"
+										src={company.logo}
+										alt={company.name}
+									/>
 								</th>
-								<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{company.name}</th
+								<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+									>{company.name}</th
 								>
 								<td class="px-6 py-4">{company.address}</td>
 								<td class="px-6 py-4">{company.code}</td>
