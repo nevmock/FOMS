@@ -1,41 +1,17 @@
-import type { Handle } from '@sveltejs/kit';
 import { StatusCodes } from 'http-status-codes';
 import { OurBaseError } from '$lib/server/core/error';
 import type { OurResponse } from '$lib/server/types/response';
-import { handleError as globalError } from '$lib/errorHandler';
 import { Prisma } from '@prisma/client';
 
 export const handle = async ({ event, resolve }) => {
 	try {
 		return resolve(event);
 	} catch (error) {
-		// Catch and handle unexpected errors
 		return error;
 	}
 };
 
-
-
-
-
-// import type { Handle } from '@sveltejs/kit';
-// import type { OurResponse } from '$lib/server/types/response';
-//
-// export const handle: Handle = async ({ event, resolve }) => {
-// 	try {
-// 		const response = await resolve(event);
-// 		return response;
-// 	} catch (error) {
-// 		throw error;
-// 	}
-// };
-//
-// export const handleError = async ({ error }) => {
-// 	// If status is an error, handle it
-// 	return new Response(globalError({ error }));
-// }
-
-export const handleError: ({ error }: { error: any }) => OurResponse<any> = ({ error }): OurResponse<any> => {
+export const handleError: ({ error }: { error }) => OurResponse<any> = ({ error }): OurResponse<any> => {
 
 	if (error instanceof Prisma.PrismaClientKnownRequestError) {
 		return {
