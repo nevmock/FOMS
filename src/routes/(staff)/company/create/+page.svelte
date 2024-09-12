@@ -71,8 +71,6 @@
 			logoUri: companyLogo
 		});
 
-		console.log(validation);
-
 		if (validation.success) {
 			validation.error.errors.map((validation) => {
 				const key = [
@@ -90,12 +88,20 @@
 			return;
 		}
 
-		let data: { name: string; code: string; address: string; logo_uri: File | string } = {
-			name: companyName,
-			code: companyCode,
-			address: companyAddress,
-			logo_uri: companyLogo
-		};
+		let data = new FormData();
+		data.append('name', companyName);
+		data.append('code', companyCode);
+		data.append('address', companyAddress);
+		if (companyLogo) {
+			data.append('logo_uri', companyLogo);
+		}
+
+		// let data: { name: string; code: string; address: string; logo_uri: File | string } = {
+		// 	name: companyName,
+		// 	code: companyCode,
+		// 	address: companyAddress,
+		// 	logo_uri: companyLogo
+		// };
 
 		await request
 			.post('/v1/company', data)
