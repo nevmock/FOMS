@@ -31,7 +31,7 @@
 	let companyName: string = '';
 	let companyCode: string = '';
 	let companyAddress: string = '';
-	let companyLogo: File | string;
+	let companyLogo: File | string = '';
 	let previewUrl: string = '';
 
 	let validations: [];
@@ -64,7 +64,7 @@
 		isLoading = true;
 		toast.loading('Saving data...');
 
-		const validation = formSchema.safeParse({
+		const validation: any = formSchema.safeParse({
 			name: companyName,
 			code: companyCode,
 			address: companyAddress,
@@ -72,7 +72,7 @@
 		});
 
 		if (validation.success) {
-			validation.error.errors.map((validation) => {
+			validation.error.errors.map((validation: { path: any[]; message: any; }) => {
 				const key = [
 					{
 						name: validation.path[0],
@@ -88,7 +88,7 @@
 			return;
 		}
 
-		let data = new FormData();
+		let data: any = new FormData();
 		data.append('name', companyName);
 		data.append('code', companyCode);
 		data.append('address', companyAddress);
@@ -96,19 +96,12 @@
 			data.append('logo_uri', companyLogo);
 		}
 
-		// let data: { name: string; code: string; address: string; logo_uri: File | string } = {
-		// 	name: companyName,
-		// 	code: companyCode,
-		// 	address: companyAddress,
-		// 	logo_uri: companyLogo
-		// };
-
 		await request
 			.post('/v1/company', data)
 			.then(function (response) {
 				if (response.data?.code === 200 || response.data?.code === 201) {
 					toast.dismiss();
-					toast.success('Success Add Blog');
+					toast.success('Success create company');
 					redirect(302, '/company');
 				}
 				isLoading = false;
@@ -143,8 +136,6 @@
 			}
 		};
 	});
-
-	$: console.log(validations);
 </script>
 
 <Toaster />
