@@ -1,0 +1,55 @@
+name: Staging FOMS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Build Docker image
+        run: docker build -t kevinirawand/foms:1.0.0 .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+          docker tag kevinirawand/foms:1.0.0 ${{ secrets.DOCKER_HUB_USERNAME }}/foms:1.0.0
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/foms:1.0.0
+
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no -i "${{ secrets.SSH_PRIVATE_KEY }}" user@your-vps-ip << 'EOF'
+            cd /path/to/your/app
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+            echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+            echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+            echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+            echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
+          EOF
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}

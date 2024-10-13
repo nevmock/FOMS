@@ -1,113 +1,137 @@
 import { StatusCodes } from 'http-status-codes';
 import { OurBaseError } from '$lib/server/core/error';
-import type { OurResponse } from '$lib/server/types/response';
 import { Prisma } from '@prisma/client';
+import { parseValidationError } from '$lib/server/utils/response';
 
 export const handle = async ({ event, resolve }) => {
 	try {
 		return resolve(event);
 	} catch (error) {
-		return error;
+		resolve(error);
 	}
 };
 
-export const handleError: ({ error }: { error }) => OurResponse<typeof error> = ({
-	error
-}): OurResponse<typeof error> => {
-	if (error instanceof Prisma.PrismaClientKnownRequestError) {
-		return {
-			code: StatusCodes.INTERNAL_SERVER_ERROR,
-			status: 'DATABASE ERROR',
-			recordsTotal: 0,
-			data: null,
-			error: {
-				message: error.message
-			}
-		};
-	}
+// export const handle = async ({ event, resolve }) => {
+// 	try {
+// 		return await resolve(event); // Pastikan resolve dipanggil dengan await
+// 	} catch (error) {
+// 		resolve(handleError({ error })); // Menangani kesalahan
+// 		// await handleError({ error });
+// 	}
+// };
 
-	if (error.name === 'TokenExpiredError') {
+export const handleError = async ({ error }: { error: any }) => {
+	let code = 500;
+	let status = '';
+	const recordsTotal = 0;
+	const data = null;
+
+	if (error instanceof Prisma.PrismaClientKnownRequestError) {
+		code = StatusCodes.INTERNAL_SERVER_ERROR;
+		status = 'DATABASE ERROR';
+		error = {
+			message: error.message
+		};
+	} else if (error instanceof OurBaseError) {
+		code = error.errorCode;
+		status = error.statusCode;
+		error = {
+			// message: error.stack
+			message: error.message
+		};
+
+		// return {
+		// 	code: code,
+		// 	status: status,
+		// 	recordsTotal: recordsTotal,
+		// 	data: data,
+		// 	error: error
+		// };
+		// return new Response(
+		// 	JSON.stringify({
+		// 		code: code,
+		// 		status: status,
+		// 		recordsTotal: recordsTotal,
+		// 		data: data,
+		// 		error: error
+		// 	}),
+		// 	{
+		// 		status: code,
+		// 		headers: {
+		// 			'Content-Type': 'application/json'
+		// 		}
+		// 	}
+		// );
+	} else if (error.name === 'TokenExpiredError') {
 		if (error.message === 'invalid signature') {
-			return {
-				code: StatusCodes.FORBIDDEN,
-				status: 'Forbidden',
-				recordsTotal: 0,
-				data: null,
-				error: {
-					message: 'Invalid Signature'
-				}
+			error = StatusCodes.FORBIDDEN;
+			status = 'Forbidden';
+			error = {
+				message: 'Invalid Signature'
 			};
 		} else {
-			return {
-				code: StatusCodes.FORBIDDEN,
-				status: 'Forbidden',
-				recordsTotal: 0,
-				data: null,
-				error: {
-					message: 'Token Is Invalid Or No Longer Valid'
-				}
+			code = StatusCodes.FORBIDDEN;
+			status = 'Forbidden';
+			error = {
+				message: 'Token Is Invalid Or No Longer Valid'
 			};
 		}
-	}
-
-	if (error.name === 'MulterError') {
+	} else if (error.name === 'MulterError') {
 		const errorObj: Record<string, string[]> = {};
 		errorObj[error.field] = [error.message];
 
-		return {
-			code: StatusCodes.BAD_REQUEST,
-			status: 'LIMIT_FILE_SIZE',
-			recordsTotal: 0,
-			data: null,
-			error: errorObj
-		};
-	}
-
-	if (error.name === 'ValidationError') {
+		code = StatusCodes.BAD_REQUEST;
+		status = 'LIMIT_FILE_SIZE';
+		error = errorObj;
+	} else if (error.name === 'ValidationError') {
 		const errorObj: Record<string, string[]> = {};
 
 		for (const detail of error.details) {
 			errorObj[detail.path] = [detail.message];
 		}
 
-		return {
-			code: StatusCodes.BAD_REQUEST,
-			status: 'Bad Request',
-			recordsTotal: 0,
-			data: null,
-			error: errorObj
+		code = StatusCodes.BAD_REQUEST;
+		status = 'Bad Request';
+		error = errorObj;
+	} else if (error.name === 'PrismaClientValidationError') {
+		code = 400;
+		status = 'Prisma Validation Error';
+		error = error.errors;
+	} else if (
+		typeof error == 'object' &&
+		// JSON.parse(JSON.stringify(error)) &&
+		error.toString()?.includes('Invalid body')
+	) {
+		console.info('YES VALIDATION');
+		code = JSON.parse(JSON.stringify(error)).status;
+		status = 'Validation Error';
+		error = {
+			message: parseValidationError(JSON.parse(JSON.stringify(error)).body.message)
+		};
+	} else {
+		code = 500;
+		status = 'Internal Server Error';
+		error = {
+			message: JSON.parse(JSON.stringify(error)).stack || error.toString()
 		};
 	}
 
-	if (error.name === 'SequelizeValidationError') {
-		return {
-			code: 400,
-			status: 'Sequelize Validation Error',
-			recordsTotal: 0,
-			data: null,
-			error: error.errors
-		};
-	}
-
-	if (error instanceof OurBaseError) {
-		return {
-			code: error.errorCode,
-			status: error.statusCode,
-			recordsTotal: 0,
-			data: null,
-			error: {
-				message: error.message
+	const response = new Response(
+		JSON.stringify({
+			code: code,
+			status: status,
+			recordsTotal: recordsTotal,
+			data: data,
+			error: error
+		}),
+		{
+			status: code,
+			statusText: status,
+			headers: {
+				'Content-Type': 'application/json'
 			}
-		};
-	}
-
-	return {
-		code: StatusCodes.INTERNAL_SERVER_ERROR,
-		status: 'Internal Server Error',
-		recordsTotal: 0,
-		data: null,
-		error: {
-			message: error.message || 'Internal Server Error'
 		}
-	};
+	);
+
+	return response;
 };
