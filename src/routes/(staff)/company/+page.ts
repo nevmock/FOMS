@@ -1,7 +1,10 @@
-// // src/routes/+page.ts
-// import type { PageLoad } from './$types';
-// import { redirect } from '@sveltejs/kit';
+import request from '../../../utils/request';
 
-// export const load: PageLoad = () => {
-// 	throw redirect(302, '/company/create');
-// };
+export async function load() {
+	console.info('FROM INDEX');
+	const response = await request.get('/company');
+	return {
+		// response: response?.status === 200 ? response?.data?.data : null
+		response: response?.data?.data || null
+	};
+}

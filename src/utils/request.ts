@@ -8,11 +8,11 @@ import Cookies from 'js-cookie';
 
 const request = axios.create({
 	// baseURL: `${process.env.REACT_APP_API_URL}/api/`,
-	baseURL: '',
-	timeout: 30000,
-	headers: {
-		'Content-Type': 'application/json'
-	}
+	baseURL: 'http://localhost:5173/api/v1',
+	timeout: 30000
+	// headers: {
+	// 	'Content-Type': 'application/json'
+	// }
 });
 
 const requestHandler = (request: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
@@ -25,22 +25,37 @@ const requestHandler = (request: InternalAxiosRequestConfig): InternalAxiosReque
 	return request;
 };
 
-const responseHandler = (response: AxiosResponse): AxiosResponse => {
+const responseHandler = (response) => {
 	return response;
+	// return {
+	// 	code: response.status,
+	// 	status: response.statusText,
+	// 	recordsTotal: 0,
+	// 	data: response.status === 200 || response.status === 201 ? response.data : null,
+	// 	error: response.status === 200 || response.status === 201 ? null : response.data
+	// };
 };
 
 const expiredTokenHandler = () => {
 	// store.dispatch(getLoginData({}))
 	localStorage.clear();
 	Cookies.remove('token');
-	// window.location.href = '/auth';
-	// return error;
+	window.location.href = '/auth';
+	return {
+		code: 401,
+		status: 'Forbidden',
+		recordsTotal: 0,
+		data: null,
+		error: {
+			test: 'test'
+		}
+	};
 };
 
-const errorHandler = (error: AxiosError): AxiosError => {
+const errorHandler = (error) => {
 	// TODO: Remove this code after you got the response information
 	// error.code === 'ERR_NETWORK' should not exist
-	if (error.response && error.response.status === 401) {
+	if (error.response && error.response?.status === 401) {
 		expiredTokenHandler();
 	} else if (error.code === 'ERR_NETWORK') {
 		// window.history.pushState({}, 'Redirect Network Error', '/auth');
@@ -48,7 +63,33 @@ const errorHandler = (error: AxiosError): AxiosError => {
 			expiredTokenHandler();
 		}
 	}
-	return error;
+
+	// return {
+	// 	code: 401,
+	// 	status: 'Forbidden',
+	// 	recordsTotal: 0,
+	// 	data: null,
+	// 	error: {
+	// 		test: 'test'
+	// 	}
+	// };
+	// return new Response(
+	// 	JSON.stringify({
+	// 		code: 401,
+	// 		status: 'Forbidden',
+	// 		recordsTotal: 0,
+	// 		data: null,
+	// 		error: {
+	// 			test: 'test'
+	// 		}
+	// 	}),
+	// 	{
+	// 		status: 401,
+	// 		headers: {
+	// 			'Content-Type': 'application/json'
+	// 		}
+	// 	}
+	// );
 };
 
 request.interceptors.request.use(
@@ -62,26 +103,16 @@ request.interceptors.response.use(
 );
 
 export default {
-	get: (
-		url: string,
-		params?: Record<string, string | number | boolean>,
-		headers: AxiosRequestConfig['headers'] = {}
-	): Promise<AxiosResponse> => request({ method: 'get', url, params, headers }),
+	get: (url: string, params?: any, headers: AxiosRequestConfig['headers'] = {}) =>
+		request({ method: 'get', url, params, headers }),
 
-	post: (
-		url: string,
-		data: Record<string, string | number | boolean>,
-		headers: AxiosRequestConfig['headers'] = {}
-	): Promise<AxiosResponse> => request({ method: 'post', url, data, headers }),
+	post: (url: string, data: any, headers: AxiosRequestConfig['headers'] = {}) =>
+		request({ method: 'post', url, data, headers }),
 
-	put: (
-		url: string,
-		data: Record<string, string | number | boolean>,
-		headers: AxiosRequestConfig['headers']
-	): Promise<AxiosResponse> => request({ method: 'put', url, data, headers }),
+	put: (url: string, data: any, headers: AxiosRequestConfig['headers']) =>
+		request({ method: 'put', url, data, headers }),
 
-	delete: (url: string, data?: Record<string, string | number | boolean>): Promise<AxiosResponse> =>
-		request({ method: 'delete', url, data }),
+	delete: (url: string, data?: any) => request({ method: 'delete', url, data }),
 
 	setToken: (token?: string) => {
 		if (token) {
