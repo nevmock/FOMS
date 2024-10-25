@@ -5,6 +5,7 @@ import CompanyService from '$lib/server/domain/company/service';
 import { ZodResponse } from '$lib/server/schema/http';
 import { companySchema } from '$lib/server/schema/company';
 import type { Company } from '@prisma/client';
+import { snakeToCamel } from '$lib/server/utils/caseParser';
 
 const Param = z.object({
 	id: z.string().nullable().optional()
@@ -19,7 +20,7 @@ export default new Endpoint({ Param, Output }).handle(async (param) => {
 
 	const response =
 		records != null
-			? (Output.parse(composeResponse(records)) as OurResponse<Company | null>)
+			? (Output.parse(snakeToCamel(composeResponse(records))) as OurResponse<Company | null>)
 			: (composeResponse(records) as OurResponse<Company | null>);
 
 	return new Response(JSON.stringify(response), {

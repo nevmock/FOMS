@@ -17,7 +17,7 @@ export default new Endpoint({ Param, Output }).handle(async (param) => {
 
 	const response =
 		records != null
-			? (Output.parse(composeResponse({ message: 'Create successfully' })) as OurResponse<any>)
+			? (Output.parse(composeResponse({ message: 'Delete successfully' })) as OurResponse<any>)
 			: (composeResponse({
 					message: 'Delete Failed'
 				}) as OurResponse<any>);
