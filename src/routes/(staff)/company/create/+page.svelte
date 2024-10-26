@@ -1,43 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Breadcrumbs from '../../../../components/Breadcrumbs.svelte';
-	import { z } from 'zod';
-	import toast, { Toaster } from 'svelte-french-toast';
-	import request from '../../../../utils/request';
-	import { redirect } from '@sveltejs/kit';
 	import type { CompanyPayload } from '$lib/server/types/company';
 	import request from '../../../../utils/request';
-
-	const MAX_FILE_SIZE = 2000;
-	const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-
-	const formSchema = z.object({
-		name: z
-			.string()
-			.min(1, { message: 'Name must be at least 1 characters long' })
-			.max(30, { message: 'Name must be at most 30 characters long.' }),
-		code: z.string().min(1, { message: 'Code must be filled in' }),
-		address: z.string().min(1, { message: 'Address must be filled in' }),
-		logoUri: z
-			.any()
-			.refine(
-				(file) => file?.size <= MAX_FILE_SIZE,
-				`The maximum file size that can be uploaded is 2MB`
-			)
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Only .jpg, .jpeg, .png and .webp formats are supported.'
-			)
-	});
 
 	let companyName: string = '';
 	let companyCode: string = '';
 	let companyAddress: string = '';
 	let companyLogo: string | Blob = '';
 	let previewUrl: string | null = null;
-
-	let validations: [];
-	let isLoading: boolean = false;
 
 	async function handleSubmit(): Promise<void> {
 		// const payload: CompanyPayload = {

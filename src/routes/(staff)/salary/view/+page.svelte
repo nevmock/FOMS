@@ -1,29 +1,10 @@
 <script lang="ts">
 	import Breadcrumbs from '../../../../components/Breadcrumbs.svelte';
+	import * as pdfjs from 'pdfjs-dist';
+	import * as pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs';
+	pdfjs.GlobalWorkerOptions.workerSrc = import.meta.url + 'pdfjs-dist/build/pdf.worker.mjs';
+
 	import { onMount } from 'svelte';
-	let slip_salary: HTMLElement;
-	let name: string = "Muhammad Arya Firmasnyah"
-
-	let html2pdf: () => { (): any; new(): any; from: { (arg0: HTMLElement): {
-		set(options: { filename: string; }): unknown; (): any; new(): any; save: { (): void; new(): any; }; 
-}; new(): any; }; };
-
-onMount(async () => {
-    const module = await import('html2pdf.js');
-    html2pdf = module.default;
-});
-
-  // Fungsi untuk mengunduh PDF
-  const downloadPDF = () => {
-		const options = {
-			filename: `Slip Gaji | September 2024 | ${name}`, // Nama file yang diinginkan
-		};
-
-		// Menggunakan html2pdf dengan opsi custom filename
-		html2pdf().from(slip_salary).set(options).save();
-	};
-
-
 
 	let loading: boolean = true;
 </script>
@@ -33,13 +14,13 @@ onMount(async () => {
 		<Breadcrumbs />
 	</div>
 	<div class="border-2 border-gray-200 bg-white rounded-lg grid grid-cols-1 divide-y">
-		<div class="p-4 flex justify-between ">
+		<div class="p-4 flex justify-between">
 			<h2 class="block text-base font-semibold text-gray-900">Salary slip</h2>
 			<div class="inline-flex gap-x-2">
 				<button
-				type="button"
+					type="button"
 					class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50"
-					on:click={downloadPDF}  
+					on:click={downloadPDF}
 				>
 					<svg
 						class="shrink-0 size-4"
@@ -60,7 +41,7 @@ onMount(async () => {
 				</button>
 				<a
 					class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-black text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-					href="#"
+					href="/#"
 				>
 					<svg
 						class="shrink-0 size-4"
@@ -121,7 +102,7 @@ onMount(async () => {
 					<!-- Col -->
 
 					<div class="text-end">
-						<address class="mt-4 not-italic text-gray-800 ">
+						<address class="mt-4 not-italic text-gray-800">
 							45 Roker Terrace<br />
 							Latheronwheel<br />
 							KW5 8NW, London<br />
@@ -196,121 +177,121 @@ onMount(async () => {
 
 				<!-- Table -->
 				<div class="grid md:grid-cols-2 gap-3">
-                    <!-- Allowance Section -->
-                    <div class="mt-6 border border-gray-200 p-4 rounded-lg flex flex-col space-y-4">
-                        <!-- Allowance Header -->
-                        <div class="hidden sm:grid sm:grid-cols-2">
-                            <div class="text-xs font-medium text-gray-500 uppercase">Reception</div>
-                            <div class="text-xs font-medium text-gray-500 uppercase">Amount</div>
-                        </div>
-                        <div class="hidden sm:block border-b border-gray-200"></div>
-                
-                        <!-- Allowance Items -->
-                        <div class="flex-grow space-y-4">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
-                                        Description
-                                    </h5>
-                                    <p class="font-medium text-gray-800">Basic Salary</p>
-                                </div>
-                                <div>
-                                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
-                                        Amount
-                                    </h5>
-                                    <p class="text-gray-800">$500</p>
-                                </div>
-                            </div>
-                
-                            <div class="sm:hidden border-b border-gray-200"></div>
-                
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
-                                        Description
-                                    </h5>
-                                    <p class="font-medium text-gray-800">Tunjangan Jabatan</p>
-                                </div>
-                                <div>
-                                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
-                                        Amount
-                                    </h5>
-                                    <p class="text-gray-800">$1250</p>
-                                </div>
-                            </div>
-                
-                            <div class="sm:hidden border-b border-gray-200"></div>
-                
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
-                                        Description
-                                    </h5>
-                                    <p class="font-medium text-gray-800">Tunjangan Bulanan</p>
-                                </div>
-                                <div>
-                                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
-                                        Amount
-                                    </h5>
-                                    <p class="text-gray-800">$2000</p>
-                                </div>
-                            </div>
-                        </div>
-                
-                        <!-- Total Allowance -->
-                        <div class="mt-auto border-t border-gray-200 pt-4">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <h5 class="font-bold text-gray-900 uppercase">Total Allowance</h5>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-gray-900 uppercase">$12000</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                
-                    <!-- Deduction Section -->
-                    <div class="mt-6 border border-gray-200 p-4 rounded-lg flex flex-col space-y-4">
-                        <!-- Deduction Header -->
-                        <div class="hidden sm:grid sm:grid-cols-2">
-                            <div class="text-xs font-medium text-gray-500 uppercase">Subtraction</div>
-                            <div class="text-xs font-medium text-gray-500 uppercase">Amount</div>
-                        </div>
-                        <div class="hidden sm:block border-b border-gray-200"></div>
-                
-                        <!-- Deduction Items -->
-                        <div class="flex-grow space-y-4">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
-                                        Description
-                                    </h5>
-                                    <p class="font-medium text-gray-800">PPh 21</p>
-                                </div>
-                                <div>
-                                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
-                                        Amount
-                                    </h5>
-                                    <p class="text-gray-800">$500</p>
-                                </div>
-                            </div>
-                        </div>
-                
-                        <!-- Total Deduction -->
-                        <div class="mt-auto border-t border-gray-200 pt-4">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <h5 class="font-bold text-gray-900 uppercase">Total Deduction</h5>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-gray-900 uppercase">$12000</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+					<!-- Allowance Section -->
+					<div class="mt-6 border border-gray-200 p-4 rounded-lg flex flex-col space-y-4">
+						<!-- Allowance Header -->
+						<div class="hidden sm:grid sm:grid-cols-2">
+							<div class="text-xs font-medium text-gray-500 uppercase">Reception</div>
+							<div class="text-xs font-medium text-gray-500 uppercase">Amount</div>
+						</div>
+						<div class="hidden sm:block border-b border-gray-200"></div>
+
+						<!-- Allowance Items -->
+						<div class="flex-grow space-y-4">
+							<div class="grid grid-cols-2 gap-2">
+								<div>
+									<h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
+										Description
+									</h5>
+									<p class="font-medium text-gray-800">Basic Salary</p>
+								</div>
+								<div>
+									<h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
+										Amount
+									</h5>
+									<p class="text-gray-800">$500</p>
+								</div>
+							</div>
+
+							<div class="sm:hidden border-b border-gray-200"></div>
+
+							<div class="grid grid-cols-2 gap-2">
+								<div>
+									<h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
+										Description
+									</h5>
+									<p class="font-medium text-gray-800">Tunjangan Jabatan</p>
+								</div>
+								<div>
+									<h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
+										Amount
+									</h5>
+									<p class="text-gray-800">$1250</p>
+								</div>
+							</div>
+
+							<div class="sm:hidden border-b border-gray-200"></div>
+
+							<div class="grid grid-cols-2 gap-2">
+								<div>
+									<h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
+										Description
+									</h5>
+									<p class="font-medium text-gray-800">Tunjangan Bulanan</p>
+								</div>
+								<div>
+									<h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
+										Amount
+									</h5>
+									<p class="text-gray-800">$2000</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- Total Allowance -->
+						<div class="mt-auto border-t border-gray-200 pt-4">
+							<div class="grid grid-cols-2 gap-2">
+								<div>
+									<h5 class="font-bold text-gray-900 uppercase">Total Allowance</h5>
+								</div>
+								<div>
+									<h5 class="font-bold text-gray-900 uppercase">$12000</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Deduction Section -->
+					<div class="mt-6 border border-gray-200 p-4 rounded-lg flex flex-col space-y-4">
+						<!-- Deduction Header -->
+						<div class="hidden sm:grid sm:grid-cols-2">
+							<div class="text-xs font-medium text-gray-500 uppercase">Subtraction</div>
+							<div class="text-xs font-medium text-gray-500 uppercase">Amount</div>
+						</div>
+						<div class="hidden sm:block border-b border-gray-200"></div>
+
+						<!-- Deduction Items -->
+						<div class="flex-grow space-y-4">
+							<div class="grid grid-cols-2 gap-2">
+								<div>
+									<h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
+										Description
+									</h5>
+									<p class="font-medium text-gray-800">PPh 21</p>
+								</div>
+								<div>
+									<h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">
+										Amount
+									</h5>
+									<p class="text-gray-800">$500</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- Total Deduction -->
+						<div class="mt-auto border-t border-gray-200 pt-4">
+							<div class="grid grid-cols-2 gap-2">
+								<div>
+									<h5 class="font-bold text-gray-900 uppercase">Total Deduction</h5>
+								</div>
+								<div>
+									<h5 class="font-bold text-gray-900 uppercase">$12000</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<!-- End Table -->
 
 				<!-- Flex -->
