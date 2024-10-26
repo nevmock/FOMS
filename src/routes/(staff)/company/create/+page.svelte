@@ -5,6 +5,8 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import request from '../../../../utils/request';
 	import { redirect } from '@sveltejs/kit';
+	import type { CompanyPayload } from '$lib/server/types/company';
+	import request from '../../../../utils/request';
 
 	const MAX_FILE_SIZE = 2000;
 	const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -31,11 +33,31 @@
 	let companyName: string = '';
 	let companyCode: string = '';
 	let companyAddress: string = '';
-	let companyLogo: File | string = '';
-	let previewUrl: string = '';
+	let companyLogo: string | Blob = '';
+	let previewUrl: string | null = null;
 
 	let validations: [];
 	let isLoading: boolean = false;
+
+	async function handleSubmit(): Promise<void> {
+		// const payload: CompanyPayload = {
+		// 	id: null,
+		// 	name: companyName,
+		// 	address: companyAddress,
+		// 	code: companyCode,
+		// 	logo_uri: JSON.stringify(companyLogo)
+		// }
+
+		const formData = new FormData();
+		formData.append('name', companyName);
+		formData.append('address', companyAddress);
+		formData.append('code', companyCode);
+
+		formData.append('logoUri', companyLogo);
+		console.info(companyLogo);
+
+		await request.post(`/company`, formData);
+	}
 
 	function handleFileSelect(e: Event): void {
 		const target = e.target as HTMLInputElement;
@@ -72,7 +94,7 @@
 		});
 
 		if (validation.success) {
-			validation.error.errors.map((validation: { path: any[]; message: any; }) => {
+			validation.error.errors.map((validation: { path: any[]; message: any }) => {
 				const key = [
 					{
 						name: validation.path[0],
@@ -162,7 +184,6 @@
 					class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 					placeholder="Company Name "
 					bind:value={companyName}
-					required
 				/>
 			</div>
 			<div>
@@ -176,7 +197,6 @@
 					class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 					placeholder="Compoany Code"
 					bind:value={companyCode}
-					required
 				/>
 			</div>
 			<div>
@@ -190,7 +210,6 @@
 					class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 					placeholder="Company Address"
 					bind:value={companyAddress}
-					required
 				/>
 			</div>
 			<div>
@@ -249,7 +268,8 @@
 		</div>
 
 		<button
-			type="submit"
+			type="button"
+			on:click={() => handleSubmit()}
 			class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
 			>Create</button
 		>

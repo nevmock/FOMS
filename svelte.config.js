@@ -2,7 +2,6 @@ import autoAdapter from '@sveltejs/adapter-auto';
 import netlifyAdapter from '@sveltejs/adapter-netlify';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 /** @type {import('@sveltejs/kit').Config} */
-import 'dotenv/config';
 
 const config = {
 	kit: {
@@ -26,7 +25,7 @@ const config = {
 					})
 				: autoAdapter(),
 		paths: {
-			base: process.env.BASE_PATH
+			base: ''
 		},
 		csrf: {
 			checkOrigin: false

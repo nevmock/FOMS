@@ -1,17 +1,16 @@
 import { Endpoint, z } from 'sveltekit-api';
-import { composeResponse } from '$lib/server/utils/response';
-import type { OurResponse } from '$lib/server/types/response';
-import type { OurPayload } from '$lib/server/types/request';
-import CompanyService from '$lib/server/domain/company/service';
-import type { Company } from '@prisma/client';
 import { ZodResponse, Query } from '$lib/server/schema/http';
-import { companySchema } from '$lib/server/schema/company';
+import PositionService from '$lib/server/domain/position/service';
+import type { OurPayload } from '$lib/server/types/request';
 import { snakeToCamel } from '$lib/server/utils/caseParser';
+import { composeResponse } from '$lib/server/utils/response';
+import type { Position } from '@prisma/client';
+import type { OurResponse } from '$lib/server/types/response';
+import { positionSchema } from '$lib/server/schema/position';
 
-const _services = new CompanyService();
+const _services = new PositionService();
 
-const Output = ZodResponse(companySchema);
-
+const Output = ZodResponse(positionSchema);
 export default new Endpoint({ Query, Output }).handle(async (param) => {
 	const payload = (await param) as OurPayload;
 	const records = await _services.getAll(payload);
@@ -20,8 +19,8 @@ export default new Endpoint({ Query, Output }).handle(async (param) => {
 		records != null
 			? (Output.parse(
 					snakeToCamel(composeResponse(records))
-				) as OurResponse<Array<Company> | null>)
-			: (composeResponse(records) as OurResponse<Array<Company> | null>);
+				) as OurResponse<Array<Position> | null>)
+			: (composeResponse(records) as OurResponse<Array<Position> | null>);
 
 	return new Response(JSON.stringify(response), {
 		status: 200,

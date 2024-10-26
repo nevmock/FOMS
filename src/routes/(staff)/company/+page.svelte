@@ -1,20 +1,23 @@
 <script lang="ts">
 	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
-	let loading = true;
-	let companies: Array<{ logo: string; name: string; address: string; code: string }> = [];
+	import type { ViewDataParsing } from '$lib/server/types/view';
+	import type { Company } from '@prisma/client';
+	import request from '../../../utils/request';
+	export let data: ViewDataParsing<Array<Company>>;
 
-	// Simulate data fetching
-	setTimeout(() => {
-		companies = [
-			{
-				logo: 'https://glints.com/id/lowongan/wp-content/uploads/2020/08/logo4.png',
-				name: 'Adidas',
-				address: 'Jl. Gatot Subroto No.289, Cibangkong, Kec. Batununggal, Kota Bandung',
-				code: '40273'
+	// TODO: replace loading to fail load data handler
+	let loading = false;
+
+	const handleDelete = async (id: string) => {
+		request.delete(`/company/${id}`).then((v) => {
+			console.info(v);
+			if (v.status === 200 || v.status === 201) {
+				console.info('BERHASIL DELETE');
+			} else {
+				console.info('GAGAL DELETE');
 			}
-		];
-		loading = false;
-	}, 2000); // Simulate a 2-second delay to fetch data
+		});
+	};
 </script>
 
 <div class="border-2 border-gray-200 bg-white rounded-lg px-2 py-3">
@@ -102,36 +105,39 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each companies as company}
-							<tr class="bg-white border-b">
-								<th class="px-6 py-4">
-									<img
-										class="w-10 h-10 object-cover"
-										src={company.logo}
-										alt={company.name}
-									/>
-								</th>
-								<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-									>{company.name}</th
-								>
-								<td class="px-6 py-4">{company.address}</td>
-								<td class="px-6 py-4">{company.code}</td>
-								<td class="px-6 py-4 inline-flex items-center gap-2">
-									<a
-										href="/company/edit"
-										class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+						{#if data && data?.response}
+							{#each data?.response as company}
+								<tr class="bg-white border-b">
+									<th class="px-6 py-4">
+										<img
+											class="w-10 h-10 object-cover"
+											src={company.logo_uri}
+											alt={'company_logo'}
+										/>
+									</th>
+									<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+										>{company.name}</th
 									>
-										Edit
-									</a>
-									<button
-										type="button"
-										class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
-									>
-										Delete
-									</button>
-								</td>
-							</tr>
-						{/each}
+									<td class="px-6 py-4">{company.address}</td>
+									<td class="px-6 py-4">{company.code}</td>
+									<td class="px-6 py-4 inline-flex items-center gap-2">
+										<a
+											href={`/company/${company.id}`}
+											class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+										>
+											Edit
+										</a>
+										<button
+											on:click={async () => await handleDelete(company.id)}
+											type="button"
+											class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+										>
+											Delete
+										</button>
+									</td>
+								</tr>
+							{/each}
+						{/if}
 					</tbody>
 				</table>
 			{/if}
