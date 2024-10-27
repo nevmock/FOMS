@@ -5,9 +5,9 @@ import axios, {
 	type InternalAxiosRequestConfig
 } from 'axios';
 import Cookies from 'js-cookie';
-import { PUBLIC_BASE_URL } from '$env/static/public';
+// import { PUBLIC_BASE_URL } from '$env/static/public';
 
-console.log(PUBLIC_BASE_URL);
+// console.log(PUBLIC_BASE_URL);
 
 const request = axios.create({
 	// baseURL: `${process.env.REACT_APP_API_URL}/api/`,
