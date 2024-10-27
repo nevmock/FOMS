@@ -1,15 +1,15 @@
 import { ZodResponse } from '$lib/server/schema/http';
-import CompanyService from '$lib/server/domain/company/service';
 import { Endpoint, z } from 'sveltekit-api';
 import { composeResponse } from '$lib/server/utils/response';
 import type { OurResponse } from '$lib/server/types/response';
+import PositionService from '$lib/server/domain/position/service';
 
 const Param = z.object({
 	id: z.string().nullable().optional()
 });
 export const Output = ZodResponse(null);
 
-const _services = new CompanyService();
+const _services = new PositionService();
 
 export default new Endpoint({ Param, Output }).handle(async (param) => {
 	const payload = Param.parse(param);

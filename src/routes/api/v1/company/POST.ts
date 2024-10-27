@@ -8,14 +8,9 @@ import type { OurResponse } from '$lib/server/types/response';
 import type { Company } from '@prisma/client';
 import CompanyService from '$lib/server/domain/company/service';
 import { camelToSnake } from '$lib/server/utils/caseParser';
+import { companySchema } from '$lib/server/schema/company';
 
-export const Input = z.object({
-	id: z.string().nullable().optional(),
-	name: z.string().min(1, { message: 'Name cannot be empty' }),
-	address: z.string().min(1, { message: 'Address cannot be empty' }),
-	code: z.string().min(1, { message: 'Code cannot be empty' }),
-	logoUri: z.any().nullable()
-});
+export const Input = companySchema;
 export const Output = ZodResponse(null);
 
 const _services = new CompanyService();
@@ -37,8 +32,7 @@ export default new Endpoint({ Input, Output }).handle(async (param) => {
 		payload.logoUri = '/company/logo/default.jpg';
 	}
 
-	console.info(payload);
-	const records = _services.save(camelToSnake(payload) as Company).then(async (v) => {
+	const records = await _services.save(camelToSnake(payload) as Company).then(async (v) => {
 		if (!v && payload.logoUri) {
 			await fs.unlink(filePath);
 		}

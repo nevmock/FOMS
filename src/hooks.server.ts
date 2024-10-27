@@ -5,9 +5,9 @@ import { parseValidationError } from '$lib/server/utils/response';
 
 export const handle = async ({ event, resolve }) => {
 	try {
-		return resolve(event);
+		return await resolve(event);
 	} catch (error) {
-		resolve(error);
+		await resolve(error);
 	}
 };
 
@@ -20,7 +20,7 @@ export const handle = async ({ event, resolve }) => {
 // 	}
 // };
 
-export const handleError = async ({ error }: { error: any }) => {
+export const handleError = async ({ error }: { error: unknown }) => {
 	let code = 500;
 	let status = '';
 	const recordsTotal = 0;
