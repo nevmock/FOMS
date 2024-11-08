@@ -16,6 +16,8 @@ const Schema: z.ZodType<Prisma.EmployeeOrderByWithRelationInput> = z
 		name: z.lazy(() => SortOrderSchema).optional(),
 		tmt: z.lazy(() => SortOrderSchema).optional(),
 		gender: z.lazy(() => SortOrderSchema).optional(),
+		whatsapp_number: z.lazy(() => SortOrderSchema).optional(),
+		email: z.lazy(() => SortOrderSchema).optional(),
 		created_at: z
 			.union([z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputObjectSchema)])
 			.optional(),

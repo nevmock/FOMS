@@ -10,12 +10,6 @@ const Schema: z.ZodType<Prisma.PositionUpdateManyMutationInput> = z
 		id: z
 			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
 			.optional(),
-		level: z
-			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
-			.optional(),
-		officer: z
-			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
-			.optional(),
 		basic_salary: z
 			.union([z.number(), z.lazy(() => FloatFieldUpdateOperationsInputObjectSchema)])
 			.optional(),

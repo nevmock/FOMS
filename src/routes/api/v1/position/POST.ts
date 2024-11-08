@@ -13,14 +13,18 @@ const _services = new PositionService();
 export default new Endpoint({ Input, Output }).handle(async (param) => {
 	const payload = Input.parse(param);
 
-	const records = await _services.save(payload);
+	await _services.save(payload);
 
-	const response =
-		records != null
-			? (Output.parse(composeResponse({ message: 'Create successfully' })) as OurResponse<any>)
-			: (composeResponse({
-					message: 'Create Failed'
-				}) as OurResponse<any>);
+	// const response =
+	// 	records != null
+	// 		? (Output.parse(composeResponse({ message: 'Create successfully' })) as OurResponse<any>)
+	// 		: (composeResponse({
+	// 				message: 'Create Failed'
+	// 			}) as OurResponse<any>);
+
+	const response = Output.parse(
+		composeResponse({ message: 'Create successfully' })
+	) as OurResponse<any>;
 
 	return new Response(JSON.stringify(response), {
 		headers: {

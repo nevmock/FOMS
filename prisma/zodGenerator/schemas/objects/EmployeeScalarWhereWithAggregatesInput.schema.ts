@@ -43,6 +43,10 @@ const Schema: z.ZodType<Prisma.EmployeeScalarWhereWithAggregatesInput> = z
 				z.lazy(() => GenderSchema)
 			])
 			.optional(),
+		whatsapp_number: z
+			.union([z.lazy(() => StringWithAggregatesFilterObjectSchema), z.string()])
+			.optional(),
+		email: z.union([z.lazy(() => StringWithAggregatesFilterObjectSchema), z.string()]).optional(),
 		created_at: z
 			.union([z.lazy(() => DateTimeNullableWithAggregatesFilterObjectSchema), z.coerce.date()])
 			.optional()

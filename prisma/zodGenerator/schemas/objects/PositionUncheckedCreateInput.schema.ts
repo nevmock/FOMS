@@ -7,8 +7,8 @@ const Schema: z.ZodType<Prisma.PositionUncheckedCreateInput> = z
 	.object({
 		id: z.string().optional(),
 		company_id: z.string(),
-		level: z.string(),
-		officer: z.string(),
+		level_id: z.string(),
+		officer_id: z.string(),
 		basic_salary: z.number(),
 		created_at: z.coerce.date().optional().nullable(),
 		updated_at: z.coerce.date().optional().nullable(),

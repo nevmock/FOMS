@@ -11,6 +11,8 @@ const Schema: z.ZodType<Prisma.EmployeeMaxAggregateInputType> = z
 		name: z.literal(true).optional(),
 		tmt: z.literal(true).optional(),
 		gender: z.literal(true).optional(),
+		whatsapp_number: z.literal(true).optional(),
+		email: z.literal(true).optional(),
 		created_at: z.literal(true).optional(),
 		updated_at: z.literal(true).optional()
 	})

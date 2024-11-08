@@ -13,8 +13,8 @@ const Schema: z.ZodType<Prisma.PositionOrderByWithAggregationInput> = z
 	.object({
 		id: z.lazy(() => SortOrderSchema).optional(),
 		company_id: z.lazy(() => SortOrderSchema).optional(),
-		level: z.lazy(() => SortOrderSchema).optional(),
-		officer: z.lazy(() => SortOrderSchema).optional(),
+		level_id: z.lazy(() => SortOrderSchema).optional(),
+		officer_id: z.lazy(() => SortOrderSchema).optional(),
 		basic_salary: z.lazy(() => SortOrderSchema).optional(),
 		created_at: z
 			.union([z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputObjectSchema)])

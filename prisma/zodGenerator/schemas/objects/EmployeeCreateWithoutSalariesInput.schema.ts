@@ -12,6 +12,8 @@ const Schema: z.ZodType<Prisma.EmployeeCreateWithoutSalariesInput> = z
 		name: z.string(),
 		tmt: z.coerce.date(),
 		gender: z.lazy(() => GenderSchema),
+		whatsapp_number: z.string(),
+		email: z.string(),
 		created_at: z.coerce.date().optional().nullable(),
 		updated_at: z.coerce.date().optional().nullable(),
 		company: z.lazy(() => CompanyCreateNestedOneWithoutEmployeesInputObjectSchema).optional(),

@@ -14,10 +14,10 @@ const Schema: z.ZodType<Prisma.PositionUncheckedUpdateInput> = z
 		company_id: z
 			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
 			.optional(),
-		level: z
+		level_id: z
 			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
 			.optional(),
-		officer: z
+		officer_id: z
 			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
 			.optional(),
 		basic_salary: z

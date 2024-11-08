@@ -34,6 +34,8 @@ const Schema: z.ZodType<Prisma.EmployeeScalarWhereInput> = z
 		gender: z
 			.union([z.lazy(() => EnumGenderFilterObjectSchema), z.lazy(() => GenderSchema)])
 			.optional(),
+		whatsapp_number: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
+		email: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
 		created_at: z
 			.union([z.lazy(() => DateTimeNullableFilterObjectSchema), z.coerce.date()])
 			.optional()

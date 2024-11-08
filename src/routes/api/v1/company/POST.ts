@@ -7,7 +7,6 @@ import { composeResponse } from '$lib/server/utils/response';
 import type { OurResponse } from '$lib/server/types/response';
 import type { Company } from '@prisma/client';
 import CompanyService from '$lib/server/domain/company/service';
-import { camelToSnake } from '$lib/server/utils/caseParser';
 import { companySchema } from '$lib/server/schema/company';
 
 export const Input = companySchema;
@@ -32,18 +31,22 @@ export default new Endpoint({ Input, Output }).handle(async (param) => {
 		payload.logoUri = '/company/logo/default.jpg';
 	}
 
-	const records = await _services.save(camelToSnake(payload) as Company).then(async (v) => {
+	await _services.save(payload as Company).then(async (v) => {
 		if (!v && payload.logoUri) {
 			await fs.unlink(filePath);
 		}
 	});
 
-	const response =
-		records != null
-			? (Output.parse(composeResponse({ message: 'Create successfully' })) as OurResponse<any>)
-			: (composeResponse({
-					message: 'Create Failed'
-				}) as OurResponse<any>);
+	// const response =
+	// 	records != null
+	// 		? (Output.parse(composeResponse({ message: 'Create successfully' })) as OurResponse<any>)
+	// 		: (composeResponse({
+	// 				message: 'Create Failed'
+	// 			}) as OurResponse<any>);
+
+	const response = Output.parse(
+		composeResponse({ message: 'Create successfully' })
+	) as OurResponse<any>;
 
 	return new Response(JSON.stringify(response), {
 		headers: {

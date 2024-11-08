@@ -27,8 +27,10 @@ const Schema: z.ZodType<Prisma.PositionScalarWhereWithAggregatesInput> = z
 		company_id: z
 			.union([z.lazy(() => StringWithAggregatesFilterObjectSchema), z.string()])
 			.optional(),
-		level: z.union([z.lazy(() => StringWithAggregatesFilterObjectSchema), z.string()]).optional(),
-		officer: z
+		level_id: z
+			.union([z.lazy(() => StringWithAggregatesFilterObjectSchema), z.string()])
+			.optional(),
+		officer_id: z
 			.union([z.lazy(() => StringWithAggregatesFilterObjectSchema), z.string()])
 			.optional(),
 		basic_salary: z

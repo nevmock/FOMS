@@ -30,6 +30,12 @@ const Schema: z.ZodType<Prisma.EmployeeUncheckedUpdateManyWithoutEmployeesInput>
 				z.lazy(() => EnumGenderFieldUpdateOperationsInputObjectSchema)
 			])
 			.optional(),
+		whatsapp_number: z
+			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
+			.optional(),
+		email: z
+			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
+			.optional(),
 		created_at: z
 			.union([
 				z.coerce.date(),

@@ -25,8 +25,8 @@ const Schema: z.ZodType<Prisma.PositionScalarWhereInput> = z
 			.optional(),
 		id: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
 		company_id: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
-		level: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
-		officer: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
+		level_id: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
+		officer_id: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
 		basic_salary: z.union([z.lazy(() => FloatFilterObjectSchema), z.number()]).optional(),
 		created_at: z
 			.union([z.lazy(() => DateTimeNullableFilterObjectSchema), z.coerce.date()])
