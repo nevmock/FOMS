@@ -96,7 +96,7 @@ export const handleError = async ({ error }: { error: unknown }) => {
 	} else if (error.name === 'PrismaClientValidationError') {
 		code = 400;
 		status = 'Prisma Validation Error';
-		error = error.errors;
+		error = String(error);
 	} else if (
 		typeof error == 'object' &&
 		// JSON.parse(JSON.stringify(error)) &&

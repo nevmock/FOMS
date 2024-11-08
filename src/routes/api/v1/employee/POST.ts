@@ -2,18 +2,20 @@ import { Endpoint, RouteModifier, z } from 'sveltekit-api';
 import { ZodResponse } from '$lib/server/schema/http';
 import { composeResponse } from '$lib/server/utils/response';
 import type { OurResponse } from '$lib/server/types/response';
-import { positionSchema } from '$lib/server/schema/position';
-import PositionService from '$lib/server/domain/position/service';
+import { employeeSchema } from '$lib/server/schema/employee';
+import EmployeeService from '$lib/server/domain/employee/employee';
+import type { Employee } from '@prisma/client';
 
-export const Input = positionSchema;
+export const Input = employeeSchema;
 export const Output = ZodResponse(null);
 
-const _services = new PositionService();
+const _services = new EmployeeService();
 
 export default new Endpoint({ Input, Output }).handle(async (param) => {
 	const payload = Input.parse(param);
 
-	await _services.save(payload);
+	console.info(JSON.stringify(payload as Employee));
+	await _services.save(payload as Employee);
 
 	// const response =
 	// 	records != null

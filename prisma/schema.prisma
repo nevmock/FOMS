@@ -34,11 +34,17 @@ model Employee {
   company     Company?   @relation(fields: [company_id], references: [id])
   position_id String
   position    Position?  @relation(fields: [position_id], references: [id])
+  // level_id String   @unique
+  // level    Level?  @relation(fields: [level_id], references: [id])
+  // officer_id String @unique
+  // officer    Officer?  @relation(fields: [officer_id], references: [id])
   salaries    Salary[]
   nip         String
   name        String
   tmt         DateTime
   gender      Gender
+  whatsapp_number      String
+  email      String     @unique
   created_at        DateTime?           @default(now())
   updated_at        DateTime?
   @@map("employee")
@@ -57,12 +63,30 @@ model Company {
   @@map("company")
 }
 
+model Level {
+  id        String @id @default(uuid())
+  name      String
+  positions Position[]
+  // employees Employee[]
+  @@map("level")
+}
+
+model Officer {
+  id        String @id @default(uuid())
+  name      String
+  positions Position[]
+  // employees Employee[]
+  @@map("officer")
+}
+
 model Position {
   id            String    @id @default(uuid())
-  company_id    String
   company       Company   @relation(fields: [company_id], references: [id])
-  level         String
-  officer       String
+  company_id    String    @unique
+  level         Level     @relation(fields: [level_id], references: [id])
+  level_id      String    @unique
+  officer       Officer  @relation(fields: [officer_id], references: [id])
+  officer_id    String    @unique
   basic_salary  Float
   employees     Employee[]
   created_at        DateTime?           @default(now())

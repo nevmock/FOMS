@@ -64,7 +64,7 @@ class CompanyService implements ICompanyService {
 					name: payload.name,
 					address: payload.address,
 					code: payload.code,
-					logo_uri: payload.logo_uri
+					logo_uri: payload.logoUri
 				}
 			});
 		} else {
@@ -73,7 +73,7 @@ class CompanyService implements ICompanyService {
 					name: payload.name,
 					address: payload.address,
 					code: payload.code,
-					logo_uri: payload.logo_uri
+					logo_uri: payload.logoUri
 				}
 			});
 		}

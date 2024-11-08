@@ -13,21 +13,21 @@ class PositionService implements IPositionService {
 				where: payload.search
 					? {
 							OR: [
-								// {
-								// 	company_id: {
-								// 		contains: search?.companyId
-								// 	}
-								// },
-								// {
-								// 	level_id: {
-								// 		contains: search?.level_id
-								// 	}
-								// },
-								// {
-								// 	officer: {
-								// 		contains: search?.officer
-								// 	}
-								// },
+								{
+									company_id: {
+										contains: search?.companyId
+									}
+								},
+								{
+									level: {
+										contains: search?.level
+									}
+								},
+								{
+									officer: {
+										contains: search?.officer
+									}
+								},
 								{
 									basic_salary: {
 										contains: parseFloat(search?.basicSalary)
@@ -53,11 +53,11 @@ class PositionService implements IPositionService {
 		return await prisma.position.findUnique({
 			where: {
 				id: id
-			},
-			include: {
-				level: true,
-				officer: true
 			}
+			// include: {
+			// 	employees: true,
+			// 	positions: true
+			// }
 		});
 	};
 
@@ -70,8 +70,8 @@ class PositionService implements IPositionService {
 					},
 					data: {
 						company_id: payload.companyId,
-						level_id: payload.levelId,
-						officer_id: payload.officerId,
+						level: payload.level,
+						officer: payload.officer,
 						basic_salary: parseFloat(payload.basicSalary)
 					}
 				});
@@ -79,8 +79,8 @@ class PositionService implements IPositionService {
 				return await prisma.position.create({
 					data: {
 						company_id: payload.companyId,
-						level_id: payload.levelId,
-						officer_id: payload.officerId,
+						level: payload.level,
+						officer: payload.officer,
 						basic_salary: parseFloat(payload.basicSalary)
 					}
 				});
