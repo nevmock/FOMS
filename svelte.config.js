@@ -1,18 +1,40 @@
-import adapter from '@sveltejs/adapter-auto';
+import autoAdapter from '@sveltejs/adapter-auto';
+import netlifyAdapter from '@sveltejs/adapter-netlify';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-
 /** @type {import('@sveltejs/kit').Config} */
+
 const config = {
-	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
-	// for more information about preprocessors
-	preprocess: vitePreprocess(),
-
 	kit: {
-		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
-		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
-		adapter: adapter()
-	}
-};
+		prerender: {
+			handleHttpError: ({ path, referrer, message }) => {
+				// ignore deliberate link to shiny 404 page
+				if (path === '/not-found' && referrer === '/blog/how-we-built-our-404-page') {
+					return;
+				}
 
+				// otherwise fail the build
+				throw new Error(message);
+			}
+		},
+		// adapter: process.env.BASE_PATH !== '' && process.env.BASE_PATH !== undefined ? staticAdapter() : autoAdapter(),
+		adapter:
+			process.env.NODE_ENV === 'development'
+				? netlifyAdapter({
+						edge: false,
+						split: false
+					})
+				: autoAdapter(),
+		paths: {
+			base: ''
+		},
+		csrf: {
+			checkOrigin: false
+		},
+		alias: {
+			$api: './src/routes/api/',
+			$lib: './src/lib/'
+		}
+	},
+	preprocess: vitePreprocess()
+};
 export default config;

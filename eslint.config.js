@@ -28,6 +28,17 @@ export default [
 		}
 	},
 	{
+		files: ["**/*.ts"],
+	},
+	{
 		ignores: ['build/', '.svelte-kit/', 'dist/']
+	},
+	{
+		linterOptions: {
+			reportUnusedDisableDirectives: true
+		},
+		rules: {
+			'@typescript-eslint/no-explicit-any': 'off'
+		}
 	}
 ];

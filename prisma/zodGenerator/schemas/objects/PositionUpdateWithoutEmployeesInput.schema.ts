@@ -1,0 +1,43 @@
+import { z } from 'zod';
+import { StringFieldUpdateOperationsInputObjectSchema } from './StringFieldUpdateOperationsInput.schema';
+import { FloatFieldUpdateOperationsInputObjectSchema } from './FloatFieldUpdateOperationsInput.schema';
+import { NullableDateTimeFieldUpdateOperationsInputObjectSchema } from './NullableDateTimeFieldUpdateOperationsInput.schema';
+import { CompanyUpdateOneRequiredWithoutPositionsNestedInputObjectSchema } from './CompanyUpdateOneRequiredWithoutPositionsNestedInput.schema';
+import { LevelUpdateOneRequiredWithoutPositionsNestedInputObjectSchema } from './LevelUpdateOneRequiredWithoutPositionsNestedInput.schema';
+import { OfficerUpdateOneRequiredWithoutPositionsNestedInputObjectSchema } from './OfficerUpdateOneRequiredWithoutPositionsNestedInput.schema';
+
+import type { Prisma } from '@prisma/client';
+
+const Schema: z.ZodType<Prisma.PositionUpdateWithoutEmployeesInput> = z
+	.object({
+		id: z
+			.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
+			.optional(),
+		basic_salary: z
+			.union([z.number(), z.lazy(() => FloatFieldUpdateOperationsInputObjectSchema)])
+			.optional(),
+		created_at: z
+			.union([
+				z.coerce.date(),
+				z.lazy(() => NullableDateTimeFieldUpdateOperationsInputObjectSchema)
+			])
+			.optional()
+			.nullable(),
+		updated_at: z
+			.union([
+				z.coerce.date(),
+				z.lazy(() => NullableDateTimeFieldUpdateOperationsInputObjectSchema)
+			])
+			.optional()
+			.nullable(),
+		company: z
+			.lazy(() => CompanyUpdateOneRequiredWithoutPositionsNestedInputObjectSchema)
+			.optional(),
+		level: z.lazy(() => LevelUpdateOneRequiredWithoutPositionsNestedInputObjectSchema).optional(),
+		officer: z
+			.lazy(() => OfficerUpdateOneRequiredWithoutPositionsNestedInputObjectSchema)
+			.optional()
+	})
+	.strict();
+
+export const PositionUpdateWithoutEmployeesInputObjectSchema = Schema;

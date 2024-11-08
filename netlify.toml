@@ -1,0 +1,9 @@
+[build]
+command = "npm run build"
+publish = "build"
+
+#[[plugins]]
+#package = "@netlify/plugin-prisma"
+#
+#[plugins.inputs]
+#database_url = "YOUR_DATABASE_URL"

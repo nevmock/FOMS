@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "./zodGenerator"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String          @id @default(uuid())
+  email       String          @unique
+  password    String?
+  role        Role            @default(USER)
+  created_at  DateTime?        @default(now())
+  updated_at  DateTime?
+  @@map("user")
+}
+
+model Employee {
+  id          String    @id @default(uuid())
+  company_id  String
+  company     Company?   @relation(fields: [company_id], references: [id])
+  position_id String
+  position    Position?  @relation(fields: [position_id], references: [id])
+  // level_id String   @unique
+  // level    Level?  @relation(fields: [level_id], references: [id])
+  // officer_id String @unique
+  // officer    Officer?  @relation(fields: [officer_id], references: [id])
+  salaries    Salary[]
+  nip         String
+  name        String
+  tmt         DateTime
+  gender      Gender
+  whatsapp_number      String
+  email      String     @unique
+  created_at        DateTime?           @default(now())
+  updated_at        DateTime?
+  @@map("employee")
+}
+
+model Company {
+  id                String             @id @default(uuid())
+  name              String
+  address           String
+  code              String
+  logo_uri          String
+  employees         Employee[]
+  positions         Position[]
+  created_at        DateTime?           @default(now())
+  updated_at        DateTime?
+  @@map("company")
+}
+
+model Level {
+  id        String @id @default(uuid())
+  name      String
+  positions Position[]
+  // employees Employee[]
+  @@map("level")
+}
+
+model Officer {
+  id        String @id @default(uuid())
+  name      String
+  positions Position[]
+  // employees Employee[]
+  @@map("officer")
+}
+
+model Position {
+  id            String    @id @default(uuid())
+  company       Company   @relation(fields: [company_id], references: [id])
+  company_id    String    @unique
+  level         Level     @relation(fields: [level_id], references: [id])
+  level_id      String    @unique
+  officer       Officer  @relation(fields: [officer_id], references: [id])
+  officer_id    String    @unique
+  basic_salary  Float
+  employees     Employee[]
+  created_at        DateTime?           @default(now())
+  updated_at        DateTime?
+  @@map("position")
+}
+
+model Salary {
+  id                  String    @id @default(uuid())
+  employee_id         String
+  employee            Employee @relation(fields: [employee_id], references: [id])
+  month_salary        String
+  position_allowance  Float
+  bjps_allowance      Float
+  tax_allowance       Float
+  other_allowance     String    @db.MediumText
+  position_deduction  Float
+  bpjs_deduction      Float
+  tax_deduction       Float
+  other_deduction     String    @db.MediumText
+  created_at        DateTime?           @default(now())
+  updated_at        DateTime?
+  @@map("salary")
+}
+
+enum Gender {
+  MAN
+  WOMAN
+}
+
+enum Role {
+  USER
+  STAFF
+}
