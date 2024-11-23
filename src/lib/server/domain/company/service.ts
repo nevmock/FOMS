@@ -33,6 +33,10 @@ class CompanyService implements ICompanyService {
 				take: payload.length ?? this.DEFAULT_SIZE,
 				orderBy: {
 					created_at: 'desc'
+				},
+				include: {
+					employees: true,
+					positions: true
 				}
 			});
 

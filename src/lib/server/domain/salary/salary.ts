@@ -18,18 +18,23 @@ class SaralryService implements ISalaryService {
 									}
 								},
 								{
-									position: {
-										contains: search?.level
+									position_allowance: {
+										contains: parseFloat(search?.positionAllowance)
 									}
 								},
 								{
-									officer: {
-										contains: search?.officer
+									bpjs_allowance: {
+										contains: search?.bpjsAllowance
 									}
 								},
 								{
-									basic_salary: {
-										contains: parseFloat(search?.basicSalary)
+									tax_allowance: {
+										contains: parseFloat(search?.taxAllowance)
+									}
+								},
+								{
+									other_allowance: {
+										contains: search?.otherAllowance
 									}
 								}
 							]

@@ -40,6 +40,10 @@ class PositionService implements IPositionService {
 				take: payload.length ?? this.DEFAULT_SIZE,
 				orderBy: {
 					created_at: 'desc'
+				},
+				include: {
+					level: true,
+					officer: true
 				}
 			});
 

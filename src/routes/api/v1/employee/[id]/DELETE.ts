@@ -1,15 +1,14 @@
 import { ZodResponse } from '$lib/server/schema/http';
 import { Endpoint, z } from 'sveltekit-api';
 import { composeResponse } from '$lib/server/utils/response';
-import type { OurResponse } from '$lib/server/types/response';
-import PositionService from '$lib/server/domain/position/service';
+import EmployeeService from '$lib/server/domain/employee/employee';
 
 const Param = z.object({
 	id: z.string().nullable().optional()
 });
 export const Output = ZodResponse(null);
 
-const _services = new PositionService();
+const _services = new EmployeeService();
 
 export default new Endpoint({ Param, Output }).handle(async (param) => {
 	const payload = Param.parse(param);
@@ -17,10 +16,10 @@ export default new Endpoint({ Param, Output }).handle(async (param) => {
 
 	const response =
 		records != null
-			? (Output.parse(composeResponse({ message: 'Delete successfully' })) as OurResponse<any>)
-			: (composeResponse({
+			? Output.parse(composeResponse({ message: 'Delete successfully' }))
+			: composeResponse({
 					message: 'Delete Failed'
-				}) as OurResponse<any>);
+				});
 
 	return new Response(JSON.stringify(response), {
 		headers: {
