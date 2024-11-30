@@ -11,8 +11,14 @@ const _services = new CompanyService();
 
 const Output = ZodResponse(companySchema);
 
-export default new Endpoint({ Query, Output }).handle(async (param) => {
-	const payload = (await param) as OurPayload;
+export default new Endpoint({ Query, Output }).handle(async (param, { request }) => {
+	const url = new URL(request.url);
+
+	const payload = await param;
+
+	const queryParams = Object.fromEntries(url.searchParams.entries());
+	// payload.advSearch = queryParams;
+
 	const records = await _services.getAll(payload);
 
 	const response =
