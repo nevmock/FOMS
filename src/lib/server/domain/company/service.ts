@@ -86,8 +86,10 @@ class CompanyService implements ICompanyService {
 		}
 	};
 
-	public getDetail = async (id: string): Promise<Company> => {
-		return await prisma.company.findUnique({
+	public getDetail = async (
+		id: string
+	): Promise<{ data: Company | null; recordsTotal: number }> => {
+		const records = await prisma.company.findUnique({
 			where: {
 				id: id
 			},
@@ -96,6 +98,11 @@ class CompanyService implements ICompanyService {
 				positions: true
 			}
 		});
+
+		return {
+			data: records,
+			recordsTotal: 1
+		};
 	};
 
 	public save = async (payload: Company) => {
