@@ -20,16 +20,16 @@
 		};
 
 		loadScripts().then(() => {
-				SwaggerUI({
-					dom_id: '#swagger-ui',
-					url: '/api/openapi',
-					deepLinking: true,
-					// presets: [
-					// 	SwaggerUI.presets.apis,
-					// 	SwaggerUI.SwaggerUIStandalonePreset
-					// ],
-					// layout: "StandaloneLayout"
-				});
+			SwaggerUI({
+				dom_id: '#swagger-ui',
+				url: '/api/openapi',
+				deepLinking: true,
+				// presets: [
+				// 	SwaggerUI.presets.apis,
+				// 	SwaggerUI.SwaggerUIStandalonePreset
+				// ],
+				// layout: "StandaloneLayout"
+			});
 		}).catch((error) => {
 			console.error('Failed to load Swagger UI scripts', error);
 		});
