@@ -5,12 +5,12 @@ import { snakeToCamel } from '$lib/server/utils/caseParser';
 import { composeResponse } from '$lib/server/utils/response';
 import type { Level } from '@prisma/client';
 import type { OurResponse } from '$lib/server/types/response';
-import { levelSchema } from '$lib/server/schema/level';
-import LevelService from '$lib/server/domain/level/service';
+import { officerSchema } from '$lib/server/schema/officer';
+import OfficerService from '$lib/server/domain/officer/service';
 
-const _services = new LevelService();
+const _services = new OfficerService();
 
-const Output = ZodResponse(levelSchema);
+const Output = ZodResponse(officerSchema);
 export default new Endpoint({ Query, Output }).handle(async (param) => {
 	const payload = (await param) as OurPayload;
 	const records = await _services.getAll(payload);
