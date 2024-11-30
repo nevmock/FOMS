@@ -1,7 +1,6 @@
 import request from '../../../utils/request';
 
 export async function load() {
-	console.info('FROM INDEX');
 	const response = await request.get('/company');
 	return {
 		response: response?.data || null
