@@ -3,27 +3,44 @@
 	import type { ViewDataParsing } from '$lib/server/types/view';
 	import type { Company } from '@prisma/client';
 	import request from '../../../utils/request';
-	export let data: ViewDataParsing<Array<Company>>;
-
-	// TODO: replace loading to fail load data handler
-	let loading = false;
-
-	console.log(data);
-
-	const handleDelete = async (id: string) => {
-		request.delete(`/company/${id}`).then((v) => {
-			console.info(v);
-			if (v.status === 200 || v.status === 201) {
-				console.info('BERHASIL DELETE');
-			} else {
-				console.info('GAGAL DELETE');
-			}
-		});
+	import Loading from '../../../components/loading/Loading.svelte';
+	import Pagination from '../../../components/pagination/Pagination.svelte';
+	import { page } from '$app/stores';
+	export let data: {
+		response: { code: number; status: string; recordsTotal: number; data: any[]; error: any };
 	};
 
-	// if (data && data.response != null) {
-	// 	data = snakeToCamel(data);
-	// }
+	const companies = data.response?.data || [];
+	const recordsTotal = data.response?.recordsTotal || 0;
+
+	console.log(companies);
+	// console.log(recordsTotal);
+
+	let loading: boolean = false;
+	// const urlParams = new URLSearchParams(window.location.search);
+	// const start = Number(urlParams.has('start'));
+	let start = Number($page.url.searchParams.get('start'));
+
+	let page1: number = start ?? 1;
+
+	const handleDelete = async (id: string) => {
+		loading = true;
+		try {
+			const response = await request.delete(`/company/${id}`);
+			if (response.status === 200 || response.status === 201) {
+				console.info('Company deleted successfully');
+				location.assign('/company');
+			} else {
+				console.error('Failed to delete the company');
+			}
+		} catch (error) {
+			console.error('Error during deletion', error);
+		} finally {
+			loading = false;
+		}
+	};
+
+	console.log(data);
 </script>
 
 <div class="border-2 border-gray-200 bg-white rounded-lg px-2 py-3">
@@ -76,29 +93,7 @@
 
 			<!-- Loading spinner -->
 			{#if loading}
-				<div class="flex justify-center items-center py-10">
-					<svg
-						class="animate-spin h-8 w-8 text-blue-700"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<circle
-							class="opacity-25"
-							cx="12"
-							cy="12"
-							r="10"
-							stroke="currentColor"
-							stroke-width="4"
-						></circle>
-						<path
-							class="opacity-75"
-							fill="currentColor"
-							d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
-						></path>
-					</svg>
-					<span class="ml-2 text-gray-700">Loading companies...</span>
-				</div>
+				<Loading message="Please wait, loading data..." />
 			{:else}
 				<table class="w-full text-sm text-left rtl:text-right text-gray-500">
 					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -111,8 +106,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#if data && data?.response}
-							{#each data?.response as company}
+						{#if companies}
+							{#each companies as company}
 								<tr class="bg-white border-b">
 									<th class="px-6 py-4">
 										<img
@@ -148,57 +143,7 @@
 				</table>
 			{/if}
 			{#if !loading}
-				<nav class="flex items-center justify-between pt-4" aria-label="Table navigation">
-					<span class="text-sm font-normal text-gray-500"
-						>Showing <span class="font-semibold text-gray-900">1-10</span> of
-						<span class="font-semibold text-gray-900">1000</span></span
-					>
-					<ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-						<li>
-							<a
-								href="/company"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
-								>Previous</a
-							>
-						</li>
-						<li>
-							<a
-								href="/company"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-								>1</a
-							>
-						</li>
-						<li>
-							<a
-								href="/company"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-								>2</a
-							>
-						</li>
-						<li>
-							<a
-								href="/company"
-								aria-current="page"
-								class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
-								>3</a
-							>
-						</li>
-						<li>
-							<a
-								href="/company"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-								>4</a
-							>
-						</li>
-						<li>
-							<a
-								href="/company"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
-								>Next</a
-							>
-						</li>
-					</ul>
-				</nav>
+				<Pagination limit={2} page={page1} {recordsTotal} />
 			{/if}
 		</div>
 	</div>
