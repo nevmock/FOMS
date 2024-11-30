@@ -55,6 +55,10 @@ class EmployeeService implements IEmployeeService {
 				take: payload.length ?? this.DEFAULT_SIZE,
 				orderBy: {
 					created_at: 'desc'
+				},
+				include: {
+					company: true,
+					position: true
 				}
 			});
 
@@ -68,11 +72,11 @@ class EmployeeService implements IEmployeeService {
 		return await prisma.employee.findUnique({
 			where: {
 				id: id
+			},
+			include: {
+				company: true,
+				position: true
 			}
-			// include: {
-			// 	employees: true,
-			// 	positions: true
-			// }
 		});
 	};
 

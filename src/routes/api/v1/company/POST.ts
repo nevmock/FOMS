@@ -21,7 +21,7 @@ export default new Endpoint({ Input, Output }).handle(async (param) => {
 
 	if (payload.logoUri) {
 		const logoBlob = payload.logoUri as Blob;
-		const fileExtension = logoBlob.type.split('/')[1];
+		const fileExtension = logoBlob.type?.split('/')[1];
 		const fileName = `${crypto.randomUUID()}.${fileExtension}`;
 
 		filePath = path.join('static', 'company', 'logo', fileName);

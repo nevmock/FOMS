@@ -2,18 +2,18 @@ import { Endpoint, z } from 'sveltekit-api';
 import { composeResponse } from '$lib/server/utils/response';
 import type { OurResponse } from '$lib/server/types/response';
 import { ZodResponse } from '$lib/server/schema/http';
-import { positionSchema } from '$lib/server/schema/position';
-import PositionService from '$lib/server/domain/position/service';
 import type { Position } from '@prisma/client';
 import { snakeToCamel } from '$lib/server/utils/caseParser';
+import { employeeSchema } from '$lib/server/schema/employee';
+import EmployeeService from '$lib/server/domain/employee/employee';
 
 const Param = z.object({
 	id: z.string().nullable().optional()
 });
 
-const Output = ZodResponse(positionSchema);
+const Output = ZodResponse(employeeSchema);
 
-const _services = new PositionService();
+const _services = new EmployeeService();
 export default new Endpoint({ Param, Output }).handle(async (param) => {
 	const payload = Param.parse(param);
 	const records = await _services.getDetail(payload.id!);

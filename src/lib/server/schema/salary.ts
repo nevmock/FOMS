@@ -1,6 +1,6 @@
 import { z } from 'sveltekit-api';
 
-export const positionSchema = z.object({
+export const salarySchema = z.object({
 	id: z.string().nullable().optional(),
 	companyId: z.string().min(1, { message: 'Company cannot be empty' }),
 	level: z.string().min(1, { message: 'Level cannot be empty' }),
