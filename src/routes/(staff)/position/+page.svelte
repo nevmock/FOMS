@@ -1,20 +1,26 @@
 <script lang="ts">
 	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
-	let loading = true;
-	let positions: Array<{ company: string; level: string; officer: string; salary: number }> = [];
+	let loading = false;
+	import type { ViewDataParsing } from '$lib/server/types/view';
+	import type { Position } from '@prisma/client';
+	import request from '../../../utils/request';
+	import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
+	export let data: ViewDataParsing<Array<Position>>;
 
 	// Simulate data fetching
-	setTimeout(() => {
-		positions = [
-			{
-				company: 'Adidas',
-				level: 'Senior Manager',
-				officer: 'Chief Financial Officer (CFO)',
-				salary: 1000000
-			}
-		];
-		loading = false;
-	}, 2000); // Simulate a 2-second delay to fetch data
+	// setTimeout(() => {
+	// 	positions = [
+	// 		{
+	// 			company: 'Adidas',
+	// 			level: 'Senior Manager',
+	// 			officer: 'Chief Financial Officer (CFO)',
+	// 			salary: 1000000
+	// 		}
+	// 	];
+	// 	loading = false;
+	// }, 2000); // Simulate a 2-second delay to fetch data
+
+	console.log(data);
 </script>
 
 <div class="border-2 border-gray-200 bg-white rounded-lg px-2 py-3">
@@ -74,9 +80,18 @@
 						fill="none"
 						viewBox="0 0 24 24"
 					>
-						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+						<circle
+							class="opacity-25"
+							cx="12"
+							cy="12"
+							r="10"
+							stroke="currentColor"
+							stroke-width="4"
 						></circle>
-						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
+						<path
+							class="opacity-75"
+							fill="currentColor"
+							d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
 						></path>
 					</svg>
 					<span class="ml-2 text-gray-700">Loading positions...</span>
@@ -93,30 +108,34 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each positions as position}
-							<tr class="bg-white border-b">
-								<th class="px-6 py-4">
-									{position.company}
-								</th>
-								<td class="px-6 py-4">{position.level}</td>
-								<td class="px-6 py-4">{position.officer}</td>
-								<td class="px-6 py-4">Rp.{position.salary.toLocaleString('id-ID')}</td>
-								<td class="px-6 py-4 inline-flex items-center gap-2">
-									<a
-										href="/position/edit"
-										class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+						{#if data && data?.response}
+							{#each data?.response as position}
+								<tr class="bg-white border-b">
+									<th class="px-6 py-4">
+										{position.company_id}
+									</th>
+									<td class="px-6 py-4">{position.level_id}</td>
+									<td class="px-6 py-4">{position.officer_id}</td>
+									<td class="px-6 py-4"
+										>Rp.{position.basic_salary.toLocaleString('id-ID')}</td
 									>
-										Edit
-									</a>
-									<button
-										type="button"
-										class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
-									>
-										Delete
-									</button>
-								</td>
-							</tr>
-						{/each}
+									<td class="px-6 py-4 inline-flex items-center gap-2">
+										<a
+											href="/position/edit"
+											class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+										>
+											Edit
+										</a>
+										<button
+											type="button"
+											class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+										>
+											Delete
+										</button>
+									</td>
+								</tr>
+							{/each}
+						{/if}
 					</tbody>
 				</table>
 			{/if}

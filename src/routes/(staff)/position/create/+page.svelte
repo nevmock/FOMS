@@ -2,6 +2,11 @@
 	import Select from 'svelte-select';
 	import Breadcrumbs from '../../../../components/Breadcrumbs.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import type { ViewDataParsing } from '$lib/server/types/view';
+	import type { Company } from '@prisma/client';
+	import request from '../../../../utils/request';
+	export let data: ViewDataParsing<Array<Company>>;
+	console.log(data);
 
 	const dispatch = createEventDispatcher();
 
@@ -14,9 +19,12 @@
 	let filterTextLevelPosition = '';
 	let filterTextOfficerPosition = '';
 
-	let listCompanies: Array<{ value: string | number; label: string; created?: boolean }> = [
-		{ value: 1, label: 'Company 1' }
-	];
+	let listCompanies: Array<{ value: string | number; label: string; created?: boolean }> =
+		data.response.map((company) => ({
+			value: company.id,
+			label: company.name
+		}));
+	console.log(listCompanies);
 	let listLevelPositions: Array<{ value: string | number; label: string; created?: boolean }> = [
 		{ value: 1, label: 'Level 1' }
 	];

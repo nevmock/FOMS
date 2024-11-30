@@ -8,6 +8,8 @@
 	// TODO: replace loading to fail load data handler
 	let loading = false;
 
+	console.log(data);
+
 	const handleDelete = async (id: string) => {
 		request.delete(`/company/${id}`).then((v) => {
 			console.info(v);
@@ -18,6 +20,10 @@
 			}
 		});
 	};
+
+	// if (data && data.response != null) {
+	// 	data = snakeToCamel(data);
+	// }
 </script>
 
 <div class="border-2 border-gray-200 bg-white rounded-lg px-2 py-3">
@@ -111,7 +117,7 @@
 									<th class="px-6 py-4">
 										<img
 											class="w-10 h-10 object-cover"
-											src={company.logo_uri}
+											src={'/static' + company.logoUri}
 											alt={'company_logo'}
 										/>
 									</th>

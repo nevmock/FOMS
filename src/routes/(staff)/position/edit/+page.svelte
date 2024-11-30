@@ -2,6 +2,11 @@
 	import Select from 'svelte-select';
 	import Breadcrumbs from '../../../../components/Breadcrumbs.svelte';
 	import { onMount, createEventDispatcher } from 'svelte';
+	import type { ViewDataParsing } from '$lib/server/types/view';
+	import type { Company } from '@prisma/client';
+	import request from '../../../../utils/request';
+	export let data: ViewDataParsing<Array<Company>>;
+	console.log(data);
 
 	const dispatch = createEventDispatcher();
 

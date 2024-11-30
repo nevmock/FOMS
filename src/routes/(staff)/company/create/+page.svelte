@@ -3,32 +3,165 @@
 	import Breadcrumbs from '../../../../components/Breadcrumbs.svelte';
 	import type { CompanyPayload } from '$lib/server/types/company';
 	import request from '../../../../utils/request';
+	import { z } from 'zod';
+	import type { ViewDataParsing } from '$lib/server/types/view';
+	import type { Company } from '@prisma/client';
+	import toast, { Toaster } from 'svelte-french-toast';
+	import { goto } from '$app/navigation';
+	import { redirect } from '@sveltejs/kit';
 
-	let companyName: string = '';
-	let companyCode: string = '';
-	let companyAddress: string = '';
-	let companyLogo: string | Blob = '';
-	let previewUrl: string | null = null;
+	export let data: ViewDataParsing<Company>;
+	console.log(data);
 
-	async function handleSubmit(): Promise<void> {
-		// const payload: CompanyPayload = {
-		// 	id: null,
-		// 	name: companyName,
-		// 	address: companyAddress,
-		// 	code: companyCode,
-		// 	logo_uri: JSON.stringify(companyLogo)
-		// }
+	const MAX_FILE_SIZE: number = 2000000; // 2MB
+	const ACCEPTED_IMAGE_TYPES: Array<string> = [
+		'image/jpeg',
+		'image/jpg',
+		'image/png',
+		'image/webp'
+	];
+
+	const formSchema = z.object({
+		name: z
+			.string()
+			.min(3, { message: 'Name must be at least 3 characters long' })
+			.max(30, { message: 'Name must be at most 30 characters long' }),
+		code: z
+			.string()
+			.min(3, { message: 'Code must be at least 3 characters long' })
+			.max(30, { message: 'Code must be at most 5 characters long' }),
+		logoUri: z
+			.any()
+			.refine(
+				(file) => file?.size <= MAX_FILE_SIZE,
+				`The maximum file size that can be uploaded is 2MB`
+			)
+			.refine(
+				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+				'Only .jpg, .jpeg, .png and .webp formats are supported'
+			),
+		address: z
+			.string()
+			.min(3, { message: 'Description must be at least 3 characters long' })
+			.max(255, { message: 'Description must be at most 255 characters long' })
+	});
+
+	let companyName: string = data.response?.name!;
+	let companyCode: string = data.response?.code!;
+	let companyAddress: string = data.response?.address!;
+	let companyLogo: string | Blob = data.response?.logo_uri!;
+	let previewUrl: string | null = data.response?.logo_uri!;
+	let isLoading: boolean = true;
+	let validations: { name: string | number; message: string }[] = [];
+
+	console.log(companyLogo);
+
+	const onSubmit = async (e: any) => {
+		e.preventDefault();
+		isLoading = true;
+		toast.loading('Saving data...');
+
+		try {
+			let validation = formSchema.safeParse({
+				name: companyName,
+				logoUri: companyLogo,
+				address: companyAddress,
+				code: companyCode
+			});
+
+			console.log(validation);
+
+			if (!validation.success) {
+				console.log(validation.error.errors);
+				validations = validation.error.errors.map((error) => ({
+					name: error.path[0],
+					message: error.message
+				}));
+				toast.dismiss();
+				toast.error('Invalid Input');
+				isLoading = false;
+				return;
+			}
+		} catch (error: any) {
+			toast.dismiss();
+			toast.error(error.message);
+			isLoading = false;
+			return;
+		}
 
 		const formData = new FormData();
 		formData.append('name', companyName);
+		formData.append('logoUri', companyLogo); // If companyLogo is a file object
 		formData.append('address', companyAddress);
 		formData.append('code', companyCode);
 
-		formData.append('logoUri', companyLogo);
-		console.info(companyLogo);
+		console.log(formData);
 
-		await request.post(`/company`, formData);
-	}
+		request
+			.post(`/company`, formData)
+			.then((response) => {
+				// Log the response to debug the structure
+				console.log(response); // This will show you the whole response object
+
+				// Check if response and response.data are defined
+				if (!response || !response.data) {
+					toast.dismiss();
+					toast.error('No response data received');
+					isLoading = false;
+					return;
+				}
+
+				const { code, status, data, error } = response.data;
+
+				if (code === 200 || code === 201) {
+					console.log(data);
+					toast.dismiss();
+					toast.success(data?.message);
+					goto('/company');
+				} else {
+					// Only attempt to format `status` if it is defined
+					const formattedStatus = status
+						? status
+								.split('_')
+								.map((word: string) => word[0].toUpperCase() + word.slice(1).toLowerCase())
+								.join(' ')
+						: 'Error';
+
+					if (code === 400 && status === 'VALIDATION_ERROR') {
+						validations = error?.validation;
+						companyLogo = '';
+					}
+					toast.dismiss();
+					toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+				}
+				isLoading = false;
+			})
+			.catch((error) => {
+				// Handle network or server errors
+				toast.dismiss();
+				toast.error(error?.message || 'An error occurred');
+				isLoading = false;
+			});
+	};
+
+	// async function handleSubmit(): Promise<void> {
+	// 	// const payload: CompanyPayload = {
+	// 	// 	id: null,
+	// 	// 	name: companyName,
+	// 	// 	address: companyAddress,
+	// 	// 	code: companyCode,
+	// 	// 	logo_uri: JSON.stringify(companyLogo)
+	// 	// }
+
+	// 	const formData = new FormData();
+	// 	formData.append('name', companyName);
+	// 	formData.append('address', companyAddress);
+	// 	formData.append('code', companyCode);
+
+	// 	formData.append('logoUri', companyLogo);
+
+	// 	await request.post(`/company`, formData);
+	// }
 
 	function handleFileSelect(e: Event): void {
 		const target = e.target as HTMLInputElement;
@@ -240,7 +373,7 @@
 
 		<button
 			type="button"
-			on:click={() => handleSubmit()}
+			on:click={(e) => onSubmit(e)}
 			class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
 			>Create</button
 		>
