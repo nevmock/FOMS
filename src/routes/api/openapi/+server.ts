@@ -9,6 +9,7 @@ export const GET = async (evt) => {
 		const openapiSpec = await api.openapi(evt);
 		return json(openapiSpec);
 	} catch (error) {
+		console.info(error);
 		throw new OurBaseError(500, 'FAIL LOAD API SPEC', error.message);
 	}
 };
