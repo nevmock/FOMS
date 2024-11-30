@@ -6,33 +6,33 @@ class CompanyService implements ICompanyService {
 	private DEFAULT_SIZE = 5;
 	public getAll = async (payload: OurPayload): Promise<Array<Company> | null> => {
 		try {
-			const search = payload?.search ? JSON.parse(payload?.search) : null;
+			const search = payload?.search;
 			const results = await prisma.company.findMany({
 				where: payload.search
 					? {
 							OR: [
 								{
 									name: {
-										contains: search?.name
+										contains: search.toLowerCase()
 									}
 								},
 								{
 									address: {
-										contains: search?.address
+										contains: search.toLowerCase()
 									}
 								},
 								{
 									code: {
-										contains: search?.code
+										contains: search.toLowerCase()
 									}
 								}
 							]
 						}
 					: undefined,
-				skip: payload.start ?? 0,
-				take: payload.length ?? this.DEFAULT_SIZE,
+				skip: parseInt(String(payload.start)) || 0,
+				take: parseInt(String(payload.length)) || this.DEFAULT_SIZE,
 				orderBy: {
-					created_at: 'desc'
+					created_at: payload.order || 'desc'
 				},
 				include: {
 					// employees: true,
