@@ -35,7 +35,7 @@ class CompanyService implements ICompanyService {
 					created_at: 'desc'
 				},
 				include: {
-					employees: true,
+					// employees: true,
 					positions: true
 				}
 			});
@@ -52,7 +52,7 @@ class CompanyService implements ICompanyService {
 				id: id
 			},
 			include: {
-				employees: true,
+				// employees: true,
 				positions: true
 			}
 		});

@@ -1,5 +1,6 @@
 import request from '../../../../utils/request';
 
+export const prerender = false;
 export async function load({ params }) {
 	const response = await request.get(`/company/${params.id}/`);
 
