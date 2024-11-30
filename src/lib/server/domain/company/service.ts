@@ -4,10 +4,16 @@ import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
 class CompanyService implements ICompanyService {
 	private DEFAULT_SIZE = 5;
-	public getAll = async (payload: OurPayload): Promise<Array<Company> | null> => {
+	public getAll = async (
+		payload: OurPayload
+	): Promise<{ data: Array<Company> | null; recordsTotal: number }> => {
 		try {
+			const result: { data: Array<Company> | null; recordsTotal: number } = {
+				data: null,
+				recordsTotal: 0
+			};
 			const search = payload?.search;
-			const results = await prisma.company.findMany({
+			const records = await prisma.company.findMany({
 				where: payload.search
 					? {
 							OR: [
@@ -40,7 +46,41 @@ class CompanyService implements ICompanyService {
 				}
 			});
 
-			return results.length > 0 ? results : null;
+			const recordsTotal = await prisma.company.findMany({
+				where: payload.search
+					? {
+							OR: [
+								{
+									name: {
+										contains: search.toLowerCase()
+									}
+								},
+								{
+									address: {
+										contains: search.toLowerCase()
+									}
+								},
+								{
+									code: {
+										contains: search.toLowerCase()
+									}
+								}
+							]
+						}
+					: undefined,
+				orderBy: {
+					created_at: payload.order || 'desc'
+				},
+				include: {
+					// employees: true,
+					positions: true
+				}
+			});
+
+			result.data = records;
+			result.recordsTotal = recordsTotal.length || 0;
+
+			return result;
 		} catch (err: unknown) {
 			return null;
 		}

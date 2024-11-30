@@ -4,8 +4,8 @@ export const composeResponse = (data): OurResponse<typeof data> => {
 	const response: OurResponse<typeof data> = {
 		code: 200,
 		status: 'OK',
-		recordsTotal: data?.length || 0,
-		data: data || null,
+		recordsTotal: data?.recordsTotal || 0,
+		data: data.data || null,
 		error: null
 	};
 
