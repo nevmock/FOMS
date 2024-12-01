@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Select from 'svelte-select';
 	import Breadcrumbs from '../../../../components/Breadcrumbs.svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import type { ViewDataParsing } from '$lib/server/types/view';
 	import type { Company } from '@prisma/client';
 	import request from '../../../../utils/request';
 	export let data: ViewDataParsing<Array<Company>>;
-	console.log(data);
+	import { writable } from 'svelte/store';
+	import Inputselect from '../../../../components/form/Inputselect.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -16,15 +17,82 @@
 	let basicSalary: number | null = null;
 	let formatBasicSalary: string | null = null;
 
+	let loading: boolean = false;
+	let validations: { name: string | number; message: string }[] = [];
+	let formDataPosition: {
+		companyId: string;
+		levelId: string;
+		officerId: string;
+		basicSalary: number;
+	} = {
+		companyId: '',
+		levelId: '',
+		officerId: '',
+		basicSalary: 0
+	};
+
+	let companies: Array<{ value: string; label: string }> = [];
+	const filterTextCompany = writable('');
+	onMount(() => {
+		filterTextCompany.subscribe(async (value) => {
+			if (value) {
+				await fetchCompanies(value);
+			}
+		});
+	});
+
+	const fetchCompanies = async (search: string) => {
+		loading = true; // Start loading indicator
+		const payload = {
+			start: 1,
+			length: 15,
+			search: search, // Use the search parameter
+			order: 'desc'
+		};
+
+		try {
+			const response = await request.get('/company', payload);
+			companies = response?.data?.data.map((company: any) => ({
+				value: company.id,
+				label: company.name
+			}));
+		} catch (error) {
+			console.error('Error fetching companies:', error);
+		} finally {
+			loading = false; // Stop loading indicator
+		}
+	};
+
+	const unsubscribe = filterTextCompany.subscribe((value) => {
+		if (value.trim() !== '') {
+			fetchCompanies(value); // Fetch companies when filter text changes
+		} else {
+			companies = []; // Clear companies if filter is empty
+		}
+	});
+
+	onDestroy(() => {
+		unsubscribe();
+	});
+
+	const handleInputChangePosition = (event: CustomEvent, name: string) => {
+		const { value } = event.detail; // Get the name and value from event detail
+		formDataPosition = {
+			...formDataPosition,
+			[name]: value
+		};
+	};
+
 	let filterTextLevelPosition = '';
 	let filterTextOfficerPosition = '';
 
-	let listCompanies: Array<{ value: string | number; label: string; created?: boolean }> =
-		data.response.map((company) => ({
+	companies =
+		data?.response?.map((company) => ({
 			value: company.id,
 			label: company.name
-		}));
-	console.log(listCompanies);
+		})) ?? [];
+
+	console.log(companies);
 	let listLevelPositions: Array<{ value: string | number; label: string; created?: boolean }> = [
 		{ value: 1, label: 'Level 1' }
 	];
@@ -69,8 +137,13 @@
 		basicSalary = parseInt(value || '0', 10);
 		formatBasicSalary = basicSalary ? `${basicSalary.toLocaleString('id-ID')}` : '';
 	}
+
+	console.log(formDataPosition);
+	console.log(companies);
 </script>
 
+<p>{$filterTextCompany}</p>
+<Inputselect />
 <div class="flex flex-col gap-2">
 	<Breadcrumbs />
 	<h1 class="text-3xl text-gray-900 font-semibold">Create Position</h1>
@@ -92,10 +165,12 @@
 				<Select
 					id="company"
 					name="company"
-					items={listCompanies}
-					bind:value={company}
+					items={companies}
 					placeholder="Select an option"
 					class="foo bar"
+					bind:value={formDataPosition.companyId}
+					on:change={(event) => handleInputChangePosition(event, 'companyId')}
+					bind:filterText={$filterTextCompany}
 				/>
 			</div>
 			<div>

@@ -1,23 +1,18 @@
 import request from '../../../utils/request';
 
-export async function load() {
-	const response = await request.get('/company');
+export async function load({ url }: { url: URL }) {
+	const page: number = parseInt(url.searchParams.get('start') || '1');
+	const length = 10;
+	// Kirim request ke API dengan search term
+	const response = await request.get(`/company`, {
+		start: (page - 1) * length + 1,
+		length: length,
+		sort: 'desc'
+	});
+
 	return {
-		response: response?.data || null
+		response: response?.data || null,
+		page,
+		length
 	};
 }
-
-// import request from '../../../utils/request';
-
-// export async function load({ url }: { url: URL }) {
-// 	const page = parseInt(url.searchParams.get('start') || '1');
-// 	const length = parseInt(url.searchParams.get('length') || '5');
-
-// 	const response = await request.get(`/company?start=${page}&length=${length}`);
-
-// 	return {
-// 		response: response?.data || null,
-// 		page,
-// 		length
-// 	};
-// }

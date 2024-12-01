@@ -56,6 +56,25 @@
 		address: '',
 		logoUri: null
 	};
+	const handleInputChange = (event: Event) => {
+		const target = event.currentTarget as HTMLInputElement;
+
+		const { name, value, type, files } = target;
+		console.log(value);
+
+		if (type === 'file') {
+			const file = files ? files[0] : null;
+			formData = {
+				...formData,
+				[name]: file
+			};
+		} else {
+			formData = {
+				...formData,
+				[name]: value
+			};
+		}
+	};
 
 	const onSubmit = async (e: any) => {
 		e.preventDefault();
@@ -142,25 +161,6 @@
 			}
 		};
 	});
-
-	const handleInputChange = (event: Event) => {
-		const target = event.currentTarget as HTMLInputElement;
-
-		const { name, value, type, files } = target;
-
-		if (type === 'file') {
-			const file = files ? files[0] : null;
-			formData = {
-				...formData,
-				[name]: file
-			};
-		} else {
-			formData = {
-				...formData,
-				[name]: value
-			};
-		}
-	};
 </script>
 
 <Toaster />

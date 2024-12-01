@@ -4,7 +4,7 @@
 	import type { ViewDataParsing } from '$lib/server/types/view';
 	import type { Position } from '@prisma/client';
 	import request from '../../../utils/request';
-	import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
+
 	export let data: ViewDataParsing<Array<Position>>;
 
 	// Simulate data fetching

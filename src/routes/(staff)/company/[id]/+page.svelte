@@ -49,17 +49,19 @@
 
 	let validations: { name: string | number; message: string }[] = [];
 	let formData: {
+		id: string;
 		name: string;
 		code: string;
 		address: string;
 		logoUri: File | null;
 	} = {
+		id: data.response?.id!,
 		name: data.response?.name!,
 		code: data.response?.code!,
 		address: data.response?.address!,
 		logoUri: null
 	};
-	let previewImage: string | null = data.response?.logoUri!;
+	let previewImage: string | null = data?.response?.logoUri;
 	let isLoading: boolean = false;
 
 	const handleInputChange = (event: Event) => {
@@ -89,18 +91,25 @@
 		};
 	});
 
-	const onSubmit = async (e: any) => {
+	const onUpdate = async (e: any) => {
 		e.preventDefault();
 		isLoading = true;
-		toast.loading('Saving data...');
+		toast.loading('Updating data...');
 
 		try {
-			let validation = formSchema.safeParse({
+			// Only include logoUri in validation if it is not null
+			const dataToValidate: any = {
 				name: formData.name,
-				logoUri: formData.logoUri,
-				address: formData.address,
-				code: formData.code
-			});
+				code: formData.code,
+				address: formData.address
+			};
+
+			if (formData.logoUri) {
+				dataToValidate.logoUri = formData.logoUri;
+			}
+
+			// Perform the validation
+			let validation = formSchema.safeParse(dataToValidate);
 
 			if (!validation.success) {
 				validations = validation.error.errors.map((error) => ({
@@ -119,12 +128,18 @@
 			return;
 		}
 
+		// Prepare FormData
 		let data: any = new FormData();
+		data.append('id', formData.id);
 		data.append('name', formData.name);
 		data.append('code', formData.code);
 		data.append('address', formData.address);
+
+		// Only append logoUri if it is not null
 		if (formData.logoUri) {
 			data.append('logoUri', formData.logoUri);
+		} else {
+			data.append('logoUri', previewImage);
 		}
 
 		request
@@ -153,7 +168,7 @@
 
 					if (code === 400 && status === 'VALIDATION_ERROR') {
 						validations = error?.validation;
-						formData.logoUri = null;
+						formData.logoUri = null; // Clear logoUri if there's a validation error
 					}
 					toast.dismiss();
 					toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
@@ -243,10 +258,35 @@
 			</div>
 
 			<button
-				type="submit"
+				type="button"
+				on:click={onUpdate}
 				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-				>Edit</button
+				disabled={isLoading}
 			>
+				{#if isLoading}
+					<!-- Loading spinner animation -->
+					<svg
+						class="w-5 h-5 mr-3 animate-spin"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						stroke-width="2"
+					>
+						<circle
+							cx="12"
+							cy="12"
+							r="10"
+							stroke="currentColor"
+							stroke-opacity="0.25"
+							stroke-width="4"
+						></circle>
+						<path fill="currentColor" d="M4 12a8 8 0 0116 0"></path>
+					</svg>
+				{:else}
+					Edit
+				{/if}
+			</button>
 		</form>
 	{/if}
 </div>
