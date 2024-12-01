@@ -2,16 +2,12 @@ import type { ICompanyService } from '$lib/server/interfaces/companyInterface';
 import type { Company } from '@prisma/client';
 import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
+import type { TGetAll, TGetDetail } from '$lib/server/types/ServiceLayer';
 class CompanyService implements ICompanyService {
 	private DEFAULT_SIZE = 5;
-	public getAll = async (
-		payload: OurPayload
-	): Promise<{ data: Array<Company> | null; recordsTotal: number }> => {
+	public getAll = async (payload: OurPayload): Promise<TGetAll<Company> | null> => {
 		try {
-			const result: { data: Array<Company> | null; recordsTotal: number } = {
-				data: null,
-				recordsTotal: 0
-			};
+			const result: TGetAll<Company> | null = null;
 			const search = payload?.search;
 			const records = await prisma.company.findMany({
 				where: payload.search
@@ -35,7 +31,7 @@ class CompanyService implements ICompanyService {
 							]
 						}
 					: undefined,
-				skip: parseInt(String(payload.start)) || 0,
+				skip: parseInt(String(payload.start)) - 1 || 0,
 				take: parseInt(String(payload.length)) || this.DEFAULT_SIZE,
 				orderBy: {
 					created_at: payload.order || 'desc'
@@ -67,14 +63,7 @@ class CompanyService implements ICompanyService {
 								}
 							]
 						}
-					: undefined,
-				orderBy: {
-					created_at: payload.order || 'desc'
-				},
-				include: {
-					// employees: true,
-					positions: true
-				}
+					: undefined
 			});
 
 			result.data = records;
@@ -86,9 +75,7 @@ class CompanyService implements ICompanyService {
 		}
 	};
 
-	public getDetail = async (
-		id: string
-	): Promise<{ data: Company | null; recordsTotal: number }> => {
+	public getDetail = async (id: string): Promise<TGetDetail<Company>> => {
 		const records = await prisma.company.findUnique({
 			where: {
 				id: id
