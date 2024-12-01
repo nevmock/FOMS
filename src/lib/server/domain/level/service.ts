@@ -1,22 +1,26 @@
-import type { Level } from '@prisma/client';
+import type { Company, Level } from '@prisma/client';
 import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
 import { OurBaseError } from '$lib/server/core/error';
 import { levelSchema } from '$lib/server/schema/level';
+import type { TGetAll, TGetDetail } from '$lib/server/types/ServiceLayer';
 class LevelService {
 	private DEFAULT_SIZE = 5;
-	public getAll = async (payload: OurPayload): Promise<Array<Level> | null> => {
+	public getAll = async (payload: OurPayload): Promise<TGetAll<Level> | null> => {
 		try {
+			const result: TGetAll<Level> | null = null;
+
 			const search = payload?.search ? JSON.parse(payload?.search) : null;
-			const results = await prisma.level.findMany({
+
+			const records = await prisma.level.findMany({
 				where: payload.search
 					? {
 							OR: [
-								// {
-								// 	company_id: {
-								// 		contains: search?.companyId
-								// 	}
-								// },
+								{
+									name: {
+										contains: search.toLowerCase()
+									}
+								}
 								// {
 								// 	level: {
 								// 		contains: search?.level
@@ -35,21 +39,53 @@ class LevelService {
 							]
 						}
 					: undefined,
-				skip: payload.start ?? 0,
-				take: payload.length ?? this.DEFAULT_SIZE,
+				skip: parseInt(String(payload.start)) - 1 || 0,
+				take: parseInt(String(payload.length)) || this.DEFAULT_SIZE,
 				orderBy: {
-					created_at: 'desc'
+					created_at: payload.order || 'desc'
 				}
 			});
 
-			return results.length > 0 ? results : null;
+			const recordsTotal = await prisma.level.findMany({
+				where: payload.search
+					? {
+							OR: [
+								{
+									name: {
+										contains: search.toLowerCase()
+									}
+								}
+								// {
+								// 	level: {
+								// 		contains: search?.level
+								// 	}
+								// },
+								// {
+								// 	officer: {
+								// 		contains: search?.officer
+								// 	}
+								// },
+								// {
+								// 	basic_salary: {
+								// 		contains: parseFloat(search?.basicSalary)
+								// 	}
+								// }
+							]
+						}
+					: undefined
+			});
+
+			result.data = records;
+			result.recordsTotal = recordsTotal.length || 0;
+
+			return result;
 		} catch (err: unknown) {
 			return null;
 		}
 	};
 
-	public getDetail = async (id: string): Promise<Level> => {
-		return await prisma.level.findUnique({
+	public getDetail = async (id: string): Promise<TGetDetail<Level>> => {
+		const records = await prisma.level.findUnique({
 			where: {
 				id: id
 			}
@@ -58,6 +94,11 @@ class LevelService {
 			// 	positions: true
 			// }
 		});
+
+		return {
+			data: records,
+			recordsTotal: 1
+		};
 	};
 
 	public save = async (payload: levelSchema) => {
