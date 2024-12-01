@@ -7,7 +7,7 @@ class CompanyService implements ICompanyService {
 	private DEFAULT_SIZE = 5;
 	public getAll = async (payload: OurPayload): Promise<TGetAll<Company> | null> => {
 		try {
-			const result: TGetAll<Company> | null = null;
+			const result: TGetAll<Company> | null = { data: null, recordsTotal: 0 };
 			const search = payload?.search;
 			const records = await prisma.company.findMany({
 				where: payload.search

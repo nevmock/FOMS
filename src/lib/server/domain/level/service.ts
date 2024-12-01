@@ -8,7 +8,7 @@ class LevelService {
 	private DEFAULT_SIZE = 5;
 	public getAll = async (payload: OurPayload): Promise<TGetAll<Level> | null> => {
 		try {
-			const result: TGetAll<Level> | null = null;
+			const result: TGetAll<Level> | null = { data: null, recordsTotal: 0 };
 
 			const search = payload?.search ? JSON.parse(payload?.search) : null;
 
