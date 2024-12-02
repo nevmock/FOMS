@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Breadcrumbs from '../../../../components/Breadcrumbs.svelte';
 	import * as pdfjs from 'pdfjs-dist';
-	import * as pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs';
+	// import * as pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs';
 	pdfjs.GlobalWorkerOptions.workerSrc = import.meta.url + 'pdfjs-dist/build/pdf.worker.mjs';
 
 	import { onMount } from 'svelte';
@@ -20,7 +20,6 @@
 				<button
 					type="button"
 					class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50"
-					on:click={downloadPDF}
 				>
 					<svg
 						class="shrink-0 size-4"
@@ -62,10 +61,8 @@
 				</a>
 			</div>
 		</div>
-		<div bind:this={slip_salary} id="slip_salary">
-			<!-- Invoice -->
+		<div id="slip_salary">
 			<div class="max-w-[85rem] px-4 sm:px-6 lg:px-8 mx-auto my-4 sm:my-10 grid gap-5">
-				<!-- Grid -->
 				<div class="flex justify-between">
 					<div>
 						<svg
@@ -99,7 +96,6 @@
 
 						<h1 class="mt-2 text-lg md:text-xl font-semibold text-black">Preline Inc.</h1>
 					</div>
-					<!-- Col -->
 
 					<div class="text-end">
 						<address class="mt-4 not-italic text-gray-800">
@@ -109,11 +105,8 @@
 							United Kingdom<br />
 						</address>
 					</div>
-					<!-- Col -->
 				</div>
-				<!-- End Grid -->
 				<div class=" border-b border-gray-200"></div>
-				<!-- Grid -->
 				<div class="grid md:grid-cols-2 gap-3">
 					<div>
 						<div class="grid space-y-3">
@@ -146,7 +139,6 @@
 							</dl>
 						</div>
 					</div>
-					<!-- Col -->
 
 					<div>
 						<div class="grid space-y-3">
@@ -171,22 +163,16 @@
 							</dl>
 						</div>
 					</div>
-					<!-- Col -->
 				</div>
-				<!-- End Grid -->
 
-				<!-- Table -->
 				<div class="grid md:grid-cols-2 gap-3">
-					<!-- Allowance Section -->
 					<div class="mt-6 border border-gray-200 p-4 rounded-lg flex flex-col space-y-4">
-						<!-- Allowance Header -->
 						<div class="hidden sm:grid sm:grid-cols-2">
 							<div class="text-xs font-medium text-gray-500 uppercase">Reception</div>
 							<div class="text-xs font-medium text-gray-500 uppercase">Amount</div>
 						</div>
 						<div class="hidden sm:block border-b border-gray-200"></div>
 
-						<!-- Allowance Items -->
 						<div class="flex-grow space-y-4">
 							<div class="grid grid-cols-2 gap-2">
 								<div>
@@ -238,7 +224,6 @@
 							</div>
 						</div>
 
-						<!-- Total Allowance -->
 						<div class="mt-auto border-t border-gray-200 pt-4">
 							<div class="grid grid-cols-2 gap-2">
 								<div>
@@ -251,16 +236,13 @@
 						</div>
 					</div>
 
-					<!-- Deduction Section -->
 					<div class="mt-6 border border-gray-200 p-4 rounded-lg flex flex-col space-y-4">
-						<!-- Deduction Header -->
 						<div class="hidden sm:grid sm:grid-cols-2">
 							<div class="text-xs font-medium text-gray-500 uppercase">Subtraction</div>
 							<div class="text-xs font-medium text-gray-500 uppercase">Amount</div>
 						</div>
 						<div class="hidden sm:block border-b border-gray-200"></div>
 
-						<!-- Deduction Items -->
 						<div class="flex-grow space-y-4">
 							<div class="grid grid-cols-2 gap-2">
 								<div>
@@ -278,7 +260,6 @@
 							</div>
 						</div>
 
-						<!-- Total Deduction -->
 						<div class="mt-auto border-t border-gray-200 pt-4">
 							<div class="grid grid-cols-2 gap-2">
 								<div>
@@ -292,12 +273,8 @@
 					</div>
 				</div>
 
-				<!-- End Table -->
-
-				<!-- Flex -->
 				<div class="mt-8 flex sm:justify-end">
 					<div class="w-full max-w-2xl sm:text-end space-y-2">
-						<!-- Grid -->
 						<div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2">
 							<dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
 								<dt class="col-span-3 text-gray-500">Subotal:</dt>
@@ -324,12 +301,9 @@
 								<dd class="col-span-2 font-medium text-gray-800">$0.00</dd>
 							</dl>
 						</div>
-						<!-- End Grid -->
 					</div>
 				</div>
-				<!-- End Flex -->
 			</div>
-			<!-- End Invoice -->
 		</div>
 	</div>
 </div>

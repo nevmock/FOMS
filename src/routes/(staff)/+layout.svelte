@@ -109,8 +109,8 @@
 			</li>
 			<li>
 				<a
-					href="{base}/user"
-					class={`flex items-center p-2 rounded-lg group ${path.startsWith('/user') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}
+					href="{base}/employee"
+					class={`flex items-center p-2 rounded-lg group ${path.startsWith('/employee') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}
 				>
 					<Icon src={BsPersonFill} className="w-5 h-5" />
 					<span class="flex-1 ms-3 whitespace-nowrap">Employee</span>
