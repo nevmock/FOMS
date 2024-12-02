@@ -101,10 +101,11 @@ class LevelService {
 		};
 	};
 
-	public save = async (payload: levelSchema) => {
+	public save = async (payload: levelSchema): Promise<TGetDetail<Level> | null> => {
 		try {
+			let records: Level | null = null;
 			if (payload.id && payload.id !== '' && payload.id !== null) {
-				return await prisma.level.update({
+				records = await prisma.level.update({
 					where: {
 						id: payload.id
 					},
@@ -114,13 +115,15 @@ class LevelService {
 					}
 				});
 			} else {
-				return await prisma.level.create({
+				records = await prisma.level.create({
 					data: {
 						position_id: payload.positionId,
 						name: payload.name
 					}
 				});
 			}
+
+			return { data: records, recordsTotal: JSON.parse(JSON.stringify(records)).length || 0 };
 		} catch (e: unknown) {
 			throw new OurBaseError(400, 'Bad Request', e.toString());
 		}

@@ -1,8 +1,9 @@
-import type { Officer } from '@prisma/client';
+import type { Level, Officer } from '@prisma/client';
 import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
 import { OurBaseError } from '$lib/server/core/error';
 import { officerSchema } from '$lib/server/schema/officer';
+import type { TGetDetail } from '$lib/server/types/ServiceLayer';
 class OfficerService {
 	private DEFAULT_SIZE = 5;
 	public getAll = async (payload: OurPayload): Promise<Array<Officer> | null> => {
@@ -12,11 +13,11 @@ class OfficerService {
 				where: payload.search
 					? {
 							OR: [
-								// {
-								// 	company_id: {
-								// 		contains: search?.companyId
-								// 	}
-								// },
+								{
+									name: {
+										contains: search?.toLowerCase()
+									}
+								}
 								// {
 								// 	level: {
 								// 		contains: search?.level
@@ -48,7 +49,7 @@ class OfficerService {
 		}
 	};
 
-	public getDetail = async (id: string): Promise<Officer> => {
+	public getDetail = async (id: string): Promise<TGetDetail<Officer> | null> => {
 		return await prisma.officer.findUnique({
 			where: {
 				id: id
@@ -62,8 +63,9 @@ class OfficerService {
 
 	public save = async (payload: officerSchema) => {
 		try {
+			let records: Level | null = null;
 			if (payload.id && payload.id !== '' && payload.id !== null) {
-				return await prisma.officer.update({
+				records = await prisma.officer.update({
 					where: {
 						id: payload.id
 					},
@@ -73,13 +75,18 @@ class OfficerService {
 					}
 				});
 			} else {
-				return await prisma.officer.create({
+				records = await prisma.officer.create({
 					data: {
 						position_id: payload.positionId,
 						name: payload.name
 					}
 				});
 			}
+
+			return {
+				data: records,
+				recordsTotal: JSON.parse(JSON.stringify(records)).length || 0
+			};
 		} catch (e: unknown) {
 			throw new OurBaseError(400, 'Bad Request', e.toString());
 		}
