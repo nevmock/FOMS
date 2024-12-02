@@ -3,7 +3,7 @@ import { ZodResponse } from '$lib/server/schema/http';
 import { composeResponse } from '$lib/server/utils/response';
 import type { OurResponse } from '$lib/server/types/response';
 import { levelSchema } from '$lib/server/schema/level';
-import LevelService from '$lib/server/domain/position/service';
+import LevelService from '$lib/server/domain/level/service';
 
 export const Input = levelSchema;
 export const Output = ZodResponse(null);
