@@ -56,7 +56,7 @@ class PositionService implements IPositionService {
 	public getDetail = async (id: string): Promise<Position> => {
 		return await prisma.position.findUnique({
 			where: {
-				id: id
+				company_id: id
 			},
 			include: {
 				level: true,
