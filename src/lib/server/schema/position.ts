@@ -5,7 +5,7 @@ export const positionSchema = z.object({
 	id: z.string().nullable().optional(),
 	companyId: z.string().min(1, { message: 'Company cannot be empty' }),
 	basicSalary: z.number().min(1, { message: 'Basic salary cannot be empty' }),
-	detailPositions: z.array(detailPositionSchema).nullable().optional()
+	detailPositions: z.array(detailPositionSchema)
 });
 
 export const positionPayload = z.object({

@@ -23,8 +23,6 @@ export default new Endpoint({ Query, Output }).handle(async (param, { request })
 
 	const records = await _services.getAll(payload);
 
-	console.info('TEST	');
-
 	const response =
 		records != null
 			? Output.parse(snakeToCamel(composeResponse(records)))

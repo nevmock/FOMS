@@ -85,7 +85,7 @@ class LevelService {
 	};
 
 	public getDetail = async (id: string): Promise<TGetDetail<Level>> => {
-		const records = await prisma.level.findUnique({
+		const records = await prisma.detailPosition.findUnique({
 			where: {
 				id: id
 			}

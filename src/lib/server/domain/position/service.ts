@@ -49,7 +49,7 @@ class PositionService implements IPositionService {
 				orderBy: {
 					created_at: 'desc'
 				},
-				includes: {
+				include: {
 					detailPositions: {
 						include: {
 							level: true,
@@ -90,6 +90,8 @@ class PositionService implements IPositionService {
 					: undefined
 			});
 
+			console.info('test');
+			// console.info(positionRecords);
 			result.data = positionRecords;
 			result.recordsTotal = recordsTotal.length || 0;
 
