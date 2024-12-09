@@ -12,15 +12,14 @@ const _services = new LevelService();
 
 const Output = ZodResponse(levelSchema);
 export default new Endpoint({ Query, Output }).handle(async (param) => {
-	const payload = (await param) as OurPayload;
+	const payload = await param;
+
 	const records = await _services.getAll(payload);
 
 	const response =
 		records != null
-			? (Output.parse(
-					snakeToCamel(composeResponse(records))
-				) as OurResponse<Array<Level> | null>)
-			: (composeResponse(records) as OurResponse<Array<Level> | null>);
+			? Output.parse(snakeToCamel(composeResponse(records)))
+			: composeResponse(records);
 
 	return new Response(JSON.stringify(response), {
 		status: 200,
