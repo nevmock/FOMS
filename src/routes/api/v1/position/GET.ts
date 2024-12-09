@@ -12,10 +12,10 @@ const Output = ZodResponse(positionResponse);
 export default new Endpoint({ Query, Output }).handle(async (param, { request }) => {
 	const url = new URL(request.url);
 
-	const payload = (await param) as OurPayload;
+	const payload: OurPayload | undefined = (await param) as OurPayload;
 	const queryParams = Object.fromEntries(url.searchParams.entries());
 
-	if (queryParams) {
+	if (queryParams?.advSearch) {
 		payload['advSearch'] = queryParams.advSearch;
 	}
 
