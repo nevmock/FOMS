@@ -13,37 +13,23 @@ class PositionService implements IPositionService {
 			const result: TGetAll<Position> | null = { data: null, recordsTotal: 0 };
 
 			const search = payload?.search;
-			const advSearch = payload?.advSearch;
+			const advSearch = JSON.parse(payload?.advSearch) || null;
 
+			console.info(advSearch);
 			const positionRecords = await prisma.position.findMany({
-				where: payload.search
-					? {
-							OR: [
-								advSearch
-									? {
-											company_id: {
-												contains: advSearch?.companyId
-											}
+				where: {
+					OR: [
+						advSearch?.companyName
+							? {
+									company: {
+										name: {
+											contains: advSearch.companyName
 										}
-									: undefined
-								// {
-								// 	level_id: {
-								// 		contains: search?.level_id
-								// 	}
-								// },
-								// {
-								// 	officer: {
-								// 		contains: search?.officer
-								// 	}
-								// },
-								// {
-								// 	basic_salary: {
-								// 		contains: parseFloat(Stringsearch)
-								// 	}
-								// }
-							]
-						}
-					: undefined,
+									}
+								}
+							: undefined
+					]
+				},
 				skip: parseInt(String(payload.start)) - 1 || 0,
 				take: parseInt(String(payload.length)) || this.DEFAULT_SIZE,
 				orderBy: {
@@ -91,8 +77,6 @@ class PositionService implements IPositionService {
 					: undefined
 			});
 
-			console.info('test');
-			console.info(positionRecords);
 			result.data = positionRecords;
 			result.recordsTotal = recordsTotal.length || 0;
 
