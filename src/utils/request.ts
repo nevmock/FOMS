@@ -5,10 +5,14 @@ import axios, {
 	type InternalAxiosRequestConfig
 } from 'axios';
 import Cookies from 'js-cookie';
-// import 'dotenv/config';
+// import dotenv from 'dotenv';
 
+// dotenv.config();
+
+// console.log(process.env.BASE_URL);
 const request = axios.create({
-	// baseURL: `${process.env.REACT_APP_API_URL}/api/`,
+	// baseURL: process.env.BASE_URL + `/api/v1`,
+	// baseURL: 'https://dev-foms.netlify.app/api/v1',
 	baseURL: 'http://localhost:5173/api/v1',
 	timeout: 30000
 	// headers: {

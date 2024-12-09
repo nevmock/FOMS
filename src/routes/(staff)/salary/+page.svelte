@@ -114,6 +114,12 @@
 									<td class="px-6 py-4">{salary.company}</td>
 									<td class="px-6 py-4">Rp.{salary.totalSalary.toLocaleString('id-ID')}</td>
 									<td class="px-6 py-4 inline-flex items-center gap-2">
+										<a 
+											href="/salary/view"
+											class="text-gray-700 bg-white hover:bg-gray-200 border-2 border-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+										>
+											View
+										</a>
 										<a
 											href="/salary/edit"
 											class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
