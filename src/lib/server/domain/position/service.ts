@@ -132,7 +132,7 @@ class PositionService implements IPositionService {
 			if (payload.id && payload.id !== '' && payload.id !== null) {
 				await prisma.position.update({
 					where: {
-						id:
+						id: payload.id
 					},
 					data: {
 						company_id: payload.companyId,
@@ -151,8 +151,8 @@ class PositionService implements IPositionService {
 					return {
 						...v,
 						positionId: payload.id
-					}
-				})
+					};
+				});
 
 				await prisma.detailPosition.createMany({
 					data: newPayload
