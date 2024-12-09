@@ -147,8 +147,15 @@ class PositionService implements IPositionService {
 					}
 				});
 
+				const newPayload = payload.options.map((v) => {
+					return {
+						...v,
+						positionId: payload.id
+					};
+				});
+
 				await prisma.detailPosition.createMany({
-					data: payload.options
+					data: newPayload
 				});
 
 				// beforeSelected -> false -> currentSelected -> true
