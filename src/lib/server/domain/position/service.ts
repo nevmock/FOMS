@@ -8,30 +8,30 @@ import type { TGetAll } from '$lib/server/types/ServiceLayer';
 import { camelToSnake } from '$lib/server/utils/caseParser';
 class PositionService implements IPositionService {
 	private DEFAULT_SIZE = 5;
-	public getAll = async (payload: OurPayload): Promise<TGetAll<Position> | null> => {
+	public getAll = async (payload: OurPayload | undefined): Promise<TGetAll<Position> | null> => {
 		try {
 			const result: TGetAll<Position> | null = { data: null, recordsTotal: 0 };
 
-			const search = payload?.search;
-			const advSearch = JSON.parse(payload?.advSearch) || null;
+			const advSearch = payload?.advSearch ? JSON.parse(payload?.advSearch) : null;
 
-			console.info(advSearch);
 			const positionRecords = await prisma.position.findMany({
 				where: {
-					OR: [
-						advSearch?.companyName
-							? {
-									company: {
-										name: {
-											contains: advSearch.companyName
+					OR: advSearch
+						? [
+								advSearch?.companyName
+									? {
+											company: {
+												name: {
+													contains: advSearch?.companyName
+												}
+											}
 										}
-									}
-								}
-							: undefined
-					]
+									: undefined
+							]
+						: undefined
 				},
-				skip: parseInt(String(payload.start)) - 1 || 0,
-				take: parseInt(String(payload.length)) || this.DEFAULT_SIZE,
+				skip: parseInt(String(payload?.start)) - 1 || 0,
+				take: parseInt(String(payload?.length)) || this.DEFAULT_SIZE,
 				orderBy: {
 					created_at: 'desc'
 				},
@@ -47,34 +47,21 @@ class PositionService implements IPositionService {
 			});
 
 			const recordsTotal = await prisma.position.findMany({
-				where: payload.search
-					? {
-							OR: [
-								advSearch
+				where: {
+					OR: advSearch
+						? [
+								advSearch?.companyName
 									? {
-											company_id: {
-												contains: advSearch?.companyId
+											company: {
+												name: {
+													contains: advSearch.companyName
+												}
 											}
 										}
 									: undefined
-								// {
-								// 	level_id: {
-								// 		contains: search?.level_id
-								// 	}
-								// },
-								// {
-								// 	officer: {
-								// 		contains: search?.officer
-								// 	}
-								// },
-								// {
-								// 	basic_salary: {
-								// 		contains: parseFloat(Stringsearch)
-								// 	}
-								// }
 							]
-						}
-					: undefined
+						: undefined
+				}
 			});
 
 			result.data = positionRecords;
