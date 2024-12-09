@@ -92,7 +92,7 @@ class PositionService implements IPositionService {
 			});
 
 			console.info('test');
-			// console.info(positionRecords);
+			console.info(positionRecords);
 			result.data = positionRecords;
 			result.recordsTotal = recordsTotal.length || 0;
 

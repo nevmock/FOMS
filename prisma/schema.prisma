@@ -66,7 +66,7 @@ model Position {
   id            String          @id @default(uuid())
   basic_salary  Float
   company_id    String
-  company       Company         @relation(fields: [company_id], references: [id])
+  company       Company?         @relation(fields: [company_id], references: [id])
   detailPositions DetailPosition[]
   created_at        DateTime?   @default(now())
   updated_at        DateTime?
