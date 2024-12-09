@@ -132,7 +132,7 @@ class PositionService implements IPositionService {
 			if (payload.id && payload.id !== '' && payload.id !== null) {
 				await prisma.position.update({
 					where: {
-						id: payload.id
+						id:
 					},
 					data: {
 						company_id: payload.companyId,
@@ -147,8 +147,15 @@ class PositionService implements IPositionService {
 					}
 				});
 
+				const newPayload = payload.options.map((v) => {
+					return {
+						...v,
+						positionId: payload.id
+					}
+				})
+
 				await prisma.detailPosition.createMany({
-					data: payload.options
+					data: newPayload
 				});
 
 				// beforeSelected -> false -> currentSelected -> true
