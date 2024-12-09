@@ -50,6 +50,7 @@ class PositionService implements IPositionService {
 					created_at: 'desc'
 				},
 				include: {
+					company: true,
 					detailPositions: {
 						include: {
 							level: true,
