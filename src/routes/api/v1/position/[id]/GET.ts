@@ -18,10 +18,12 @@ export default new Endpoint({ Param, Output }).handle(async (param) => {
 	const payload = Param.parse(param);
 	const records = await _services.getDetail(payload.id!);
 
+	console.info(records.data.detailPositions);
+
 	const response =
 		records != null
-			? (Output.parse(snakeToCamel(composeResponse(records))) as OurResponse<Position | null>)
-			: (composeResponse(records) as OurResponse<Position | null>);
+			? Output.parse(snakeToCamel(composeResponse(records)))
+			: composeResponse(records);
 
 	return new Response(JSON.stringify(response), {
 		status: 200,

@@ -20,8 +20,8 @@ export default new Endpoint({ Param, Output }).handle(async (param) => {
 
 	const response =
 		records != null
-			? (Output.parse(snakeToCamel(composeResponse(records))) as OurResponse<Officer | null>)
-			: (composeResponse(records) as OurResponse<Officer | null>);
+			? Output.parse(snakeToCamel(composeResponse(records)))
+			: composeResponse(records);
 
 	return new Response(JSON.stringify(response), {
 		status: 200,

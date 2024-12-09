@@ -11,16 +11,24 @@ import { positionSchema } from '$lib/server/schema/position';
 const _services = new PositionService();
 
 const Output = ZodResponse(positionSchema);
-export default new Endpoint({ Query, Output }).handle(async (param) => {
-	const payload = (await param) as OurPayload;
+export default new Endpoint({ Query, Output }).handle(async (param, { request }) => {
+	const url = new URL(request.url);
+
+	const payload = await param;
+	const queryParams = Object.fromEntries(url.searchParams.entries());
+
+	if (queryParams) {
+		payload['advSearch'] = queryParams;
+	}
+
 	const records = await _services.getAll(payload);
+
+	console.info('TEST	');
 
 	const response =
 		records != null
-			? (Output.parse(
-					snakeToCamel(composeResponse(records))
-				) as OurResponse<Array<Position> | null>)
-			: (composeResponse(records) as OurResponse<Array<Position> | null>);
+			? Output.parse(snakeToCamel(composeResponse(records)))
+			: composeResponse(records);
 
 	return new Response(JSON.stringify(response), {
 		status: 200,

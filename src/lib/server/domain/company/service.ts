@@ -35,10 +35,6 @@ class CompanyService implements ICompanyService {
 				take: parseInt(String(payload.length)) || this.DEFAULT_SIZE,
 				orderBy: {
 					created_at: payload.order || 'desc'
-				},
-				include: {
-					// employees: true,
-					positions: true
 				}
 			});
 
@@ -79,16 +75,12 @@ class CompanyService implements ICompanyService {
 		const records = await prisma.company.findUnique({
 			where: {
 				id: id
-			},
-			include: {
-				// employees: true,
-				positions: true
 			}
 		});
 
 		return {
 			data: records,
-			recordsTotal: 1
+			recordsTotal: records.length || 0
 		};
 	};
 

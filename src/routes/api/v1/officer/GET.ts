@@ -17,10 +17,8 @@ export default new Endpoint({ Query, Output }).handle(async (param) => {
 
 	const response =
 		records != null
-			? (Output.parse(
-					snakeToCamel(composeResponse(records))
-				) as OurResponse<Array<Level> | null>)
-			: (composeResponse(records) as OurResponse<Array<Level> | null>);
+			? Output.parse(snakeToCamel(composeResponse(records)))
+			: composeResponse(records);
 
 	return new Response(JSON.stringify(response), {
 		status: 200,

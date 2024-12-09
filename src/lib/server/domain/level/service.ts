@@ -10,17 +10,17 @@ class LevelService {
 		try {
 			const result: TGetAll<Level> | null = { data: null, recordsTotal: 0 };
 
-			const search = payload?.search ? JSON.parse(payload?.search) : null;
+			const search = payload?.search;
 
 			const records = await prisma.level.findMany({
 				where: payload.search
 					? {
 							OR: [
-								{
-									name: {
-										contains: search.toLowerCase()
-									}
-								}
+								// {
+								// 	name: {
+								// 		contains: search.toLowerCase()
+								// 	}
+								// }
 								// {
 								// 	level: {
 								// 		contains: search?.level
@@ -97,7 +97,7 @@ class LevelService {
 
 		return {
 			data: records,
-			recordsTotal: 1
+			recordsTotal: records.length || 0
 		};
 	};
 
@@ -110,14 +110,12 @@ class LevelService {
 						id: payload.id
 					},
 					data: {
-						position_id: payload.positionId,
 						name: payload.name
 					}
 				});
 			} else {
 				records = await prisma.level.create({
 					data: {
-						position_id: payload.positionId,
 						name: payload.name
 					}
 				});

@@ -5,7 +5,7 @@ export const composeResponse = (data): OurResponse<typeof data> => {
 		code: 200,
 		status: 'OK',
 		recordsTotal: data?.recordsTotal || 0,
-		data: data.data || null,
+		data: data?.data || null,
 		error: null
 	};
 
