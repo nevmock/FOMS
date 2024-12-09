@@ -1,5 +1,5 @@
 import type { IPositionService } from '$lib/server/interfaces/positionInterface';
-import type { Company, Position } from '@prisma/client';
+import type { Position } from '@prisma/client';
 import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
 import { OurBaseError } from '$lib/server/core/error';
@@ -79,6 +79,7 @@ class PositionService implements IPositionService {
 				id: id
 			},
 			include: {
+				company: true,
 				detailPositions: {
 					include: {
 						level: true,
