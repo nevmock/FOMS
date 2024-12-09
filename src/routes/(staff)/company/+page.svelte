@@ -16,7 +16,7 @@
 
 	let loading: boolean = false;
 	let start = Number($page.url.searchParams.get('start') ?? 1);
-	let length = Number($page.url.searchParams.get('length') ?? 10);
+	let length = 10;
 	let search = '';
 	let timeout: NodeJS.Timeout;
 
@@ -144,37 +144,39 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each companies as company}
-							<tr class="bg-white border-b">
-								<th class="px-6 py-4">
-									<img
-										class="w-10 h-10 object-cover"
-										src={'/static' + company.logoUri}
-										alt="company_logo"
-									/>
-								</th>
-								<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-									>{company.name}</th
-								>
-								<td class="px-6 py-4">{company.address}</td>
-								<td class="px-6 py-4">{company.code}</td>
-								<td class="px-6 py-4 inline-flex items-center gap-2">
-									<a
-										href={`/company/${company.id}`}
-										class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+						{#if companies}
+							{#each companies as company}
+								<tr class="bg-white border-b">
+									<th class="px-6 py-4">
+										<img
+											class="w-10 h-10 object-cover"
+											src={'/static' + company.logoUri}
+											alt="company_logo"
+										/>
+									</th>
+									<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+										>{company.name}</th
 									>
-										Edit
-									</a>
-									<button
-										on:click={async () => await handleDelete(company.id)}
-										type="button"
-										class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
-									>
-										Delete
-									</button>
-								</td>
-							</tr>
-						{/each}
+									<td class="px-6 py-4">{company.address}</td>
+									<td class="px-6 py-4">{company.code}</td>
+									<td class="px-6 py-4 inline-flex items-center gap-2">
+										<a
+											href={`/company/${company.id}`}
+											class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+										>
+											Edit
+										</a>
+										<button
+											on:click={async () => await handleDelete(company.id)}
+											type="button"
+											class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
+										>
+											Delete
+										</button>
+									</td>
+								</tr>
+							{/each}
+						{/if}
 					</tbody>
 				</table>
 			{/if}

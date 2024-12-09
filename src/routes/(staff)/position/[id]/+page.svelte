@@ -5,8 +5,12 @@
 	import type { ViewDataParsing } from '$lib/server/types/view';
 	import type { Company } from '@prisma/client';
 	import request from '../../../../utils/request';
-	export let data: ViewDataParsing<Array<Company>>;
+	export let data: any;
 	console.log(data);
+
+	let positions = data.response?.data || {};
+	console.log(positions);
+	let recordsTotal = data.response?.recordsTotal || 0;
 
 	const dispatch = createEventDispatcher();
 
@@ -16,8 +20,8 @@
 		value: 'Senior Manager'
 	};
 	let officerPosition: { label: string; value: string } | null = {
-		label: 'Chief Financial Officer (CFO)',
-		value: 'Chief Financial Officer (CFO)'
+		label: 's',
+		value: 'a'
 	};
 	let basicSalary: number | null = 5000000; // Default value for basic salary
 	let formatBasicSalary: string | null = basicSalary
@@ -31,7 +35,7 @@
 	let listLevelPositions: Array<{ value: string; label: string; created?: boolean }> = [];
 	let listOfficerPositions: Array<{ value: string; label: string; created?: boolean }> = [];
 
-	let isLoading = true; // Add loading state
+	let loading = true; // Add loading state
 
 	// Simulate data loading
 	onMount(() => {
@@ -40,9 +44,17 @@
 			listCompanies = [{ value: 'Adidas', label: 'Adidas' }];
 			listLevelPositions = [{ value: 'Senior Manager', label: 'Senior Manager' }];
 			listOfficerPositions = [
-				{ value: 'Chief Financial Officer (CFO)', label: 'Chief Financial Officer (CFO)' }
+				{ value: 'Chief Financial Officer (CFO)', label: 'Chief Financial Officer (CFO)' },
+				{ value: 'manager', label: 'Manager' },
+				{ value: 'supervisor', label: 'Supervisor' },
+				{ value: 'staff', label: 'Staff' },
+				{ value: 'intern', label: 'Intern' },
+				{ value: 'director', label: 'Director' },
+				{ value: 'ceo', label: 'CEO' },
+				{ value: 'cto', label: 'CTO' },
+				{ value: 'cfo', label: 'CFO' }
 			];
-			isLoading = false; // Set loading to false after data is loaded
+			loading = false; // Set loading to false after data is loaded
 		}, 2000); // Simulate 2 seconds delay
 	});
 
@@ -98,7 +110,7 @@
 		<p class="text-sm text-gray-400">Put the Position Profile details in</p>
 	</div>
 
-	{#if isLoading}
+	{#if loading}
 		<div class="flex justify-center items-center py-10">
 			<svg
 				class="animate-spin h-8 w-8 text-blue-700"

@@ -20,9 +20,12 @@ CREATE TABLE `employee` (
     `name` VARCHAR(191) NOT NULL,
     `tmt` DATETIME(3) NOT NULL,
     `gender` ENUM('MAN', 'WOMAN') NOT NULL,
+    `whatsapp_number` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NULL,
 
+    UNIQUE INDEX `employee_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -40,16 +43,46 @@ CREATE TABLE `company` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `position` (
+CREATE TABLE `level` (
     `id` VARCHAR(191) NOT NULL,
-    `company_id` VARCHAR(191) NOT NULL,
-    `level` VARCHAR(191) NOT NULL,
-    `officer` VARCHAR(191) NOT NULL,
-    `basic_salary` DOUBLE NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NULL,
 
     PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `officer` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `position` (
+    `id` VARCHAR(191) NOT NULL,
+    `basic_salary` DOUBLE NOT NULL,
+    `company_id` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `detailPosition` (
+    `position_id` VARCHAR(191) NOT NULL,
+    `level_id` VARCHAR(191) NOT NULL,
+    `officer_id` VARCHAR(191) NOT NULL,
+    `is_active` BOOLEAN NOT NULL DEFAULT false,
+
+    UNIQUE INDEX `detailPosition_position_id_key`(`position_id`),
+    UNIQUE INDEX `detailPosition_level_id_key`(`level_id`),
+    UNIQUE INDEX `detailPosition_officer_id_key`(`officer_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -72,13 +105,10 @@ CREATE TABLE `salary` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `employee` ADD CONSTRAINT `employee_company_id_fkey` FOREIGN KEY (`company_id`) REFERENCES `company`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `detailPosition` ADD CONSTRAINT `detailPosition_position_id_fkey` FOREIGN KEY (`position_id`) REFERENCES `position`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `employee` ADD CONSTRAINT `employee_position_id_fkey` FOREIGN KEY (`position_id`) REFERENCES `position`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `detailPosition` ADD CONSTRAINT `detailPosition_level_id_fkey` FOREIGN KEY (`level_id`) REFERENCES `level`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `position` ADD CONSTRAINT `position_company_id_fkey` FOREIGN KEY (`company_id`) REFERENCES `company`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `salary` ADD CONSTRAINT `salary_employee_id_fkey` FOREIGN KEY (`employee_id`) REFERENCES `employee`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `detailPosition` ADD CONSTRAINT `detailPosition_officer_id_fkey` FOREIGN KEY (`officer_id`) REFERENCES `officer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

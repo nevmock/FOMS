@@ -62,7 +62,7 @@
 		logoUri: null
 	};
 	let previewImage: string | null = data?.response?.logoUri;
-	let isLoading: boolean = false;
+	let loading: boolean = false;
 
 	const handleInputChange = (event: Event) => {
 		const target = event.currentTarget as HTMLInputElement;
@@ -93,7 +93,7 @@
 
 	const onUpdate = async (e: any) => {
 		e.preventDefault();
-		isLoading = true;
+		loading = true;
 		toast.loading('Updating data...');
 
 		try {
@@ -118,13 +118,13 @@
 				}));
 				toast.dismiss();
 				toast.error('Invalid Input');
-				isLoading = false;
+				loading = false;
 				return;
 			}
 		} catch (error: any) {
 			toast.dismiss();
 			toast.error(error.message);
-			isLoading = false;
+			loading = false;
 			return;
 		}
 
@@ -148,7 +148,7 @@
 				if (!response || !response.data) {
 					toast.dismiss();
 					toast.error('No response data received');
-					isLoading = false;
+					loading = false;
 					return;
 				}
 
@@ -173,12 +173,12 @@
 					toast.dismiss();
 					toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
 				}
-				isLoading = false;
+				loading = false;
 			})
 			.catch((error) => {
 				toast.dismiss();
 				toast.error(error?.message || 'An error occurred');
-				isLoading = false;
+				loading = false;
 			});
 	};
 </script>
@@ -193,7 +193,7 @@
 		<h2 class="block text-base font-semibold text-gray-900">Company Profile</h2>
 		<p class="text-sm text-gray-400">Put the Company Profile details in</p>
 	</div>
-	{#if isLoading}
+	{#if loading}
 		<div class="flex justify-center items-center py-10">
 			<svg
 				class="animate-spin h-8 w-8 text-blue-700"
@@ -261,9 +261,9 @@
 				type="button"
 				on:click={onUpdate}
 				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-				disabled={isLoading}
+				disabled={loading}
 			>
-				{#if isLoading}
+				{#if loading}
 					<!-- Loading spinner animation -->
 					<svg
 						class="w-5 h-5 mr-3 animate-spin"

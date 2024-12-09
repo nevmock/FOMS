@@ -1,26 +1,75 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import Loading from '../../../components/loading/Loading.svelte';
+	import Pagination from '../../../components/pagination/Pagination.svelte';
 	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
-	let loading = false;
 	import type { ViewDataParsing } from '$lib/server/types/view';
 	import type { Position } from '@prisma/client';
 	import request from '../../../utils/request';
 
-	export let data: ViewDataParsing<Array<Position>>;
+	export let data: {
+		response: any;
+	};
 
-	// Simulate data fetching
-	// setTimeout(() => {
-	// 	positions = [
-	// 		{
-	// 			company: 'Adidas',
-	// 			level: 'Senior Manager',
-	// 			officer: 'Chief Financial Officer (CFO)',
-	// 			salary: 1000000
-	// 		}
-	// 	];
-	// 	loading = false;
-	// }, 2000); // Simulate a 2-second delay to fetch data
+	let positions = data.response?.data || [];
+	console.log(positions);
+	let recordsTotal = data.response?.recordsTotal || 0;
 
-	console.log(data);
+	let loading = false;
+	let start = Number($page.url.searchParams.get('start') ?? 1);
+	let length = 10;
+	let search = '';
+	let timeout: NodeJS.Timeout;
+
+	const hanldeSearch = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+
+		clearTimeout(timeout);
+
+		timeout = setTimeout(() => {
+			search = target.value;
+			goto(`?start=1`);
+			fetchPositions(search, 1);
+		}, 700);
+	};
+
+	const fetchPositions = async (search: string, start: Number) => {
+		loading = true;
+		const payload = {
+			start: start,
+			length: length,
+			search: search,
+			sort: 'desc'
+		};
+
+		try {
+			const response = await request.get('/position', payload);
+			positions = response?.data?.data || [];
+			recordsTotal = response?.data?.recordsTotal || 0;
+			loading = false;
+		} catch (error) {
+			console.error('Error fetching companies:', error);
+			loading = false;
+		}
+	};
+
+	const handleDelete = async (id: string) => {
+		loading = true;
+		try {
+			const response = await request.delete(`/position/${id}`);
+			if (response.status === 200 || response.status === 201) {
+				console.info('Position deleted successfully');
+				location.assign('/position');
+			} else {
+				console.error('Failed to delete the position');
+			}
+		} catch (error) {
+			console.error('Error during deletion', error);
+		} finally {
+			loading = false;
+		}
+	};
 </script>
 
 <div class="border-2 border-gray-200 bg-white rounded-lg px-2 py-3">
@@ -34,9 +83,20 @@
 	<div class="p-4">
 		<div class="relative overflow-x-auto sm:rounded-lg">
 			<div class="pb-4 bg-white flex justify-between items-center">
-				<div class="relative">
-					<div
-						class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none"
+				<div class="relative flex items-center">
+					<input
+						type="text"
+						id="search"
+						name="search"
+						bind:value={search}
+						class="w-80 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block ps-10 p-2.5"
+						placeholder="Search for companies"
+						on:input={hanldeSearch}
+					/>
+					<button
+						type="button"
+						class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 cursor-pointer bg-transparent"
+						aria-label="Search"
 					>
 						<svg
 							class="w-4 h-4 text-gray-500"
@@ -53,15 +113,7 @@
 								d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
 							/>
 						</svg>
-					</div>
-					<input
-						type="text"
-						id="basicSalary"
-						name="basicSalary"
-						class="w-80 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 outline-none block ps-10 p-2.5"
-						placeholder="Search for companies"
-						required
-					/>
+					</button>
 				</div>
 				<a
 					href="/position/create"
@@ -71,31 +123,8 @@
 				</a>
 			</div>
 
-			<!-- Loading spinner -->
 			{#if loading}
-				<div class="flex justify-center items-center py-10">
-					<svg
-						class="animate-spin h-8 w-8 text-blue-700"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<circle
-							class="opacity-25"
-							cx="12"
-							cy="12"
-							r="10"
-							stroke="currentColor"
-							stroke-width="4"
-						></circle>
-						<path
-							class="opacity-75"
-							fill="currentColor"
-							d="M4 12a8 8 0 0116 0h-4a4 4 0 00-8 0H4z"
-						></path>
-					</svg>
-					<span class="ml-2 text-gray-700">Loading positions...</span>
-				</div>
+				<Loading message="Please wait, loading data..." />
 			{:else}
 				<table class="w-full text-sm text-left rtl:text-right text-gray-500">
 					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -108,25 +137,30 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#if data && data?.response}
-							{#each data?.response as position}
+						{#if positions}
+							{#each positions as position}
 								<tr class="bg-white border-b">
 									<th class="px-6 py-4">
-										{position.company_id}
+										{position?.company?.name}
 									</th>
-									<td class="px-6 py-4">{position.level_id}</td>
-									<td class="px-6 py-4">{position.officer_id}</td>
+									<td class="px-6 py-4">
+										{position?.detailPositions[0]?.level?.name}
+									</td>
+									<td class="px-6 py-4">
+										{position?.detailPositions[0]?.officer?.name}
+									</td>
 									<td class="px-6 py-4"
-										>Rp.{position.basic_salary.toLocaleString('id-ID')}</td
+										>Rp.{position?.basicSalary.toLocaleString('id-ID')}</td
 									>
 									<td class="px-6 py-4 inline-flex items-center gap-2">
 										<a
-											href="/position/edit"
+											href={`/position/${position?.id}`}
 											class="text-blue-700 bg-white hover:bg-blue-200 border-2 border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
 										>
 											Edit
 										</a>
 										<button
+											on:click={async () => await handleDelete(position?.id)}
 											type="button"
 											class="text-red-700 bg-white hover:bg-red-200 border-2 border-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full gap-2 sm:w-auto px-5 py-2.5 text-center"
 										>
@@ -140,57 +174,7 @@
 				</table>
 			{/if}
 			{#if !loading}
-				<nav class="flex items-center justify-between pt-4" aria-label="Table navigation">
-					<span class="text-sm font-normal text-gray-500"
-						>Showing <span class="font-semibold text-gray-900">1-10</span> of
-						<span class="font-semibold text-gray-900">1000</span></span
-					>
-					<ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-						<li>
-							<a
-								href="/position"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
-								>Previous</a
-							>
-						</li>
-						<li>
-							<a
-								href="/position"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-								>1</a
-							>
-						</li>
-						<li>
-							<a
-								href="/position"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-								>2</a
-							>
-						</li>
-						<li>
-							<a
-								href="/position"
-								aria-current="page"
-								class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
-								>3</a
-							>
-						</li>
-						<li>
-							<a
-								href="/position"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-								>4</a
-							>
-						</li>
-						<li>
-							<a
-								href="/position"
-								class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
-								>Next</a
-							>
-						</li>
-					</ul>
-				</nav>
+				<Pagination limit={length} page={start} {recordsTotal} />
 			{/if}
 		</div>
 	</div>

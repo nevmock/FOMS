@@ -43,7 +43,7 @@
 			.max(255, { message: 'Description must be at most 255 characters long' })
 	});
 	let previewUrl: string | null = data.response?.logo_uri!;
-	let isLoading: boolean = false;
+	let loading: boolean = false;
 	let validations: { name: string | number; message: string }[] = [];
 	let formData: {
 		name: string;
@@ -78,7 +78,7 @@
 
 	const onSubmit = async (e: any) => {
 		e.preventDefault();
-		isLoading = true;
+		loading = true;
 		toast.loading('Saving data...');
 
 		try {
@@ -96,13 +96,13 @@
 				}));
 				toast.dismiss();
 				toast.error('Invalid Input');
-				isLoading = false;
+				loading = false;
 				return;
 			}
 		} catch (error: any) {
 			toast.dismiss();
 			toast.error(error.message);
-			isLoading = false;
+			loading = false;
 			return;
 		}
 
@@ -120,7 +120,7 @@
 				if (!response || !response.data) {
 					toast.dismiss();
 					toast.error('No response data received');
-					isLoading = false;
+					loading = false;
 					return;
 				}
 
@@ -145,12 +145,12 @@
 					toast.dismiss();
 					toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
 				}
-				isLoading = false;
+				loading = false;
 			})
 			.catch((error) => {
 				toast.dismiss();
 				toast.error(error?.message || 'An error occurred');
-				isLoading = false;
+				loading = false;
 			});
 	};
 
@@ -225,9 +225,9 @@
 			type="button"
 			on:click={onSubmit}
 			class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-			disabled={isLoading}
+			disabled={loading}
 		>
-			{#if isLoading}
+			{#if loading}
 				<!-- Loading spinner animation -->
 				<svg
 					class="w-5 h-5 mr-3 animate-spin"
