@@ -1,7 +1,6 @@
 import type { OurResponse } from '$lib/server/types/response';
 
 export const composeResponse = (data): OurResponse<typeof data> => {
-	console.info(data);
 	const response: OurResponse<typeof data> = {
 		code: 200,
 		status: 'OK',
