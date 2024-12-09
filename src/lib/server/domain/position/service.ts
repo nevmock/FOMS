@@ -48,12 +48,15 @@ class PositionService implements IPositionService {
 				take: parseInt(String(payload.length)) || this.DEFAULT_SIZE,
 				orderBy: {
 					created_at: 'desc'
+				},
+				includes: {
+					detailPositions: {
+						include: {
+							level: true,
+							officer: true
+						}
+					}
 				}
-				// includes: {
-				// 	level_links: true,
-				// 	officer_links: true,
-				// 	company_links: true
-				// }
 			});
 
 			const recordsTotal = await prisma.position.findMany({
