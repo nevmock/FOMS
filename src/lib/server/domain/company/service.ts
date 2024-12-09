@@ -2,56 +2,86 @@ import type { ICompanyService } from '$lib/server/interfaces/companyInterface';
 import type { Company } from '@prisma/client';
 import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
+import type { TGetAll, TGetDetail } from '$lib/server/types/ServiceLayer';
 class CompanyService implements ICompanyService {
 	private DEFAULT_SIZE = 5;
-	public getAll = async (payload: OurPayload): Promise<Array<Company> | null> => {
+	public getAll = async (payload: OurPayload): Promise<TGetAll<Company> | null> => {
 		try {
-			const search = payload?.search ? JSON.parse(payload?.search) : null;
-			const results = await prisma.company.findMany({
+			const result: TGetAll<Company> | null = { data: null, recordsTotal: 0 };
+			const search = payload?.search;
+			const records = await prisma.company.findMany({
 				where: payload.search
 					? {
 							OR: [
 								{
 									name: {
-										contains: search?.name
+										contains: search.toLowerCase()
 									}
 								},
 								{
 									address: {
-										contains: search?.address
+										contains: search.toLowerCase()
 									}
 								},
 								{
 									code: {
-										contains: search?.code
+										contains: search.toLowerCase()
 									}
 								}
 							]
 						}
 					: undefined,
-				skip: payload.start ?? 0,
-				take: payload.length ?? this.DEFAULT_SIZE,
+				skip: parseInt(String(payload.start)) - 1 || 0,
+				take: parseInt(String(payload.length)) || this.DEFAULT_SIZE,
 				orderBy: {
-					created_at: 'desc'
+					created_at: payload.order || 'desc'
 				}
 			});
 
-			return results.length > 0 ? results : null;
+			const recordsTotal = await prisma.company.findMany({
+				where: payload.search
+					? {
+							OR: [
+								{
+									name: {
+										contains: search.toLowerCase()
+									}
+								},
+								{
+									address: {
+										contains: search.toLowerCase()
+									}
+								},
+								{
+									code: {
+										contains: search.toLowerCase()
+									}
+								}
+							]
+						}
+					: undefined
+			});
+
+			result.data = records;
+			result.recordsTotal = recordsTotal.length || 0;
+
+			return result;
 		} catch (err: unknown) {
 			return null;
 		}
 	};
 
-	public getDetail = async (id: string): Promise<Company> => {
-		return await prisma.company.findUnique({
+	public getDetail = async (id: string): Promise<TGetDetail<Company>> => {
+		const records = await prisma.company.findUnique({
 			where: {
 				id: id
-			},
-			include: {
-				employees: true,
-				positions: true
 			}
 		});
+
+		return {
+			data: records,
+			recordsTotal: records.length || 0
+		};
 	};
 
 	public save = async (payload: Company) => {

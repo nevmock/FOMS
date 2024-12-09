@@ -20,13 +20,15 @@ export default new Endpoint({ Input, Output }).handle(async (param) => {
 	let filePath: string = '';
 
 	if (payload.logoUri) {
-		const logoBlob = payload.logoUri as Blob;
-		const fileExtension = logoBlob.type.split('/')[1];
-		const fileName = `${crypto.randomUUID()}.${fileExtension}`;
+		if (typeof payload.logoUri != 'string') {
+			const logoBlob = payload.logoUri as Blob;
+			const fileExtension = logoBlob.type?.split('/')[1];
+			const fileName = `${crypto.randomUUID()}.${fileExtension}`;
 
-		filePath = path.join('static', 'company', 'logo', fileName);
-		await fs.writeFile(filePath, Buffer.from(await logoBlob.arrayBuffer()));
-		payload.logoUri = filePath.split('static')[1];
+			filePath = path.join('static', 'company', 'logo', fileName);
+			await fs.writeFile(filePath, Buffer.from(await logoBlob.arrayBuffer()));
+			payload.logoUri = filePath.split('static')[1];
+		}
 	} else {
 		payload.logoUri = '/company/logo/default.jpg';
 	}

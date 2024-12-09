@@ -1,14 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator zod {
-  provider = "prisma-zod-generator"
-  output   = "./zodGenerator"
-}
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -31,14 +20,7 @@ model User {
 model Employee {
   id          String    @id @default(uuid())
   company_id  String
-  company     Company?   @relation(fields: [company_id], references: [id])
   position_id String
-  position    Position?  @relation(fields: [position_id], references: [id])
-  // level_id String   @unique
-  // level    Level?  @relation(fields: [level_id], references: [id])
-  // officer_id String @unique
-  // officer    Officer?  @relation(fields: [officer_id], references: [id])
-  salaries    Salary[]
   nip         String
   name        String
   tmt         DateTime
@@ -56,48 +38,55 @@ model Company {
   address           String
   code              String
   logo_uri          String
-  employees         Employee[]
-  positions         Position[]
+  Positions         Position[]
   created_at        DateTime?           @default(now())
   updated_at        DateTime?
   @@map("company")
 }
 
 model Level {
-  id        String @id @default(uuid())
-  name      String
-  positions Position[]
-  // employees Employee[]
+  id          String        @id @default(uuid())
+  name        String
+  detailPositions DetailPosition[]
+  created_at        DateTime?           @default(now())
+  updated_at        DateTime?
   @@map("level")
 }
 
 model Officer {
-  id        String @id @default(uuid())
-  name      String
-  positions Position[]
-  // employees Employee[]
+  id          String        @id @default(uuid())
+  name        String
+  detailPositions DetailPosition[]
+  created_at        DateTime?           @default(now())
+  updated_at        DateTime?
   @@map("officer")
 }
 
 model Position {
-  id            String    @id @default(uuid())
-  company       Company   @relation(fields: [company_id], references: [id])
-  company_id    String    @unique
-  level         Level     @relation(fields: [level_id], references: [id])
-  level_id      String    @unique
-  officer       Officer  @relation(fields: [officer_id], references: [id])
-  officer_id    String    @unique
+  id            String          @id @default(uuid())
   basic_salary  Float
-  employees     Employee[]
-  created_at        DateTime?           @default(now())
+  company_id    String
+  company       Company?         @relation(fields: [company_id], references: [id])
+  detailPositions DetailPosition[]
+  created_at        DateTime?   @default(now())
   updated_at        DateTime?
   @@map("position")
+}
+
+model DetailPosition {
+  position_id     String      @unique
+  level_id        String      @unique
+  officer_id      String      @unique
+  is_active       Boolean     @default(false)
+  position      Position      @relation(fields: [position_id], references: [id])
+  level         Level         @relation(fields: [level_id], references: [id])
+  officer       Officer       @relation(fields: [officer_id], references: [id])
+  @@map("detailPosition")
 }
 
 model Salary {
   id                  String    @id @default(uuid())
   employee_id         String
-  employee            Employee @relation(fields: [employee_id], references: [id])
   month_salary        String
   position_allowance  Float
   bjps_allowance      Float
@@ -111,6 +100,7 @@ model Salary {
   updated_at        DateTime?
   @@map("salary")
 }
+
 
 enum Gender {
   MAN

@@ -14,14 +14,19 @@ const Param = z.object({
 const Output = ZodResponse(companySchema);
 
 const _services = new CompanyService();
-export default new Endpoint({ Param, Output }).handle(async (param) => {
+export default new Endpoint({ Param, Output }).handle(async (param, { request }) => {
 	const payload = Param.parse(param);
+	const url = new URL(request.url);
+	const queryParams = Object.fromEntries(url.searchParams.entries());
+
+	const params = Param.parse(queryParams);
+
 	const records = await _services.getDetail(payload.id!);
 
 	const response =
 		records != null
-			? (Output.parse(snakeToCamel(composeResponse(records))) as OurResponse<Company | null>)
-			: (composeResponse(records) as OurResponse<Company | null>);
+			? Output.parse(snakeToCamel(composeResponse(records)))
+			: composeResponse(records);
 
 	return new Response(JSON.stringify(response), {
 		status: 200,
