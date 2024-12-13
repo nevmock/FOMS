@@ -10,6 +10,10 @@ export async function load({ url }: { url: URL }) {
 		sort: 'desc'
 	});
 
+	if (!response) {
+		throw new Error('Data tidak ditemukan');
+	}
+
 	return {
 		response: response?.data || null,
 		page,

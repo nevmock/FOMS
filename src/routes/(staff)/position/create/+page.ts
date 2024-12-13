@@ -8,6 +8,11 @@ export async function load() {
 		search: '',
 		sort: 'desc'
 	});
+
+	if (!response) {
+		throw new Error('Data tidak ditemukan');
+	}
+
 	return {
 		// response: response?.status === 200 ? response?.data?.data : null
 		response: response?.data?.data || null
