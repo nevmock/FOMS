@@ -9,14 +9,16 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
+		"module": "ESNext",
+		"target": "ESNext",
 		"moduleResolution": "bundler",
 		"baseUrl": ".",
-		"paths": {
-			"@zod/*": ["prisma/zodGenerator/*"],
-			"$lib/*": ["src/lib/*"],
-		},
-		"types": ["node", "jquery"]
+		"types": ["node", "ts-node"]
 	},
-	"include": ["src/**/*", "static/**/*", "path/to/your/file.ts"],
-	"exclude": ["node_modules", "**/*.spec.ts"]
+	"ts-node": {
+		"esm": true,
+		"transpileOnly": true
+	},
+	"include": ["src/**/*", "static/**/*", "prisma/**/*"],
+	"exclude": ["node_modules", "**/*.spec.ts", "**/*.js"]
 }

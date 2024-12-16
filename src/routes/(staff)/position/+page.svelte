@@ -4,8 +4,6 @@
 	import Loading from '../../../components/loading/Loading.svelte';
 	import Pagination from '../../../components/pagination/Pagination.svelte';
 	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
-	import type { ViewDataParsing } from '$lib/server/types/view';
-	import type { Position } from '@prisma/client';
 	import request from '../../../utils/request';
 
 	export let data: {
@@ -34,7 +32,7 @@
 		}, 700);
 	};
 
-	const fetchPositions = async (search: string, start: Number) => {
+	const fetchPositions = async (search: string, start: number) => {
 		loading = true;
 		const payload = {
 			start: start,

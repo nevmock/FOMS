@@ -1,7 +1,5 @@
 import request from '../../../utils/request';
 
-// export const preRander = true;
-
 export async function load({ url }: { url: URL }) {
 	const page: number = parseInt(url.searchParams.get('start') || '1');
 	const length = 10;
