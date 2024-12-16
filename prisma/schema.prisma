@@ -82,6 +82,7 @@ model DetailPosition {
   level         Level         @relation(fields: [level_id], references: [id])
   officer       Officer       @relation(fields: [officer_id], references: [id])
   @@map("detailPosition")
+  @@unique([position_id, level_id, officer_id])
 }
 
 model Salary {
