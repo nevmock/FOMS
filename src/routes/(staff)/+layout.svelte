@@ -80,7 +80,7 @@
 >
 	<div class="h-full px-3 pb-4 overflow-y-auto bg-white">
 		<ul class="space-y-2 font-medium">
-			<li>
+			<!-- <li>
 				<a
 					href="{base}/dashboard"
 					class={`flex items-center p-2 rounded-lg group ${path.startsWith('/dashboard') ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}
@@ -88,7 +88,7 @@
 					<Icon src={FaSolidChartPie} className="w-5 h-5" />
 					<span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
 				</a>
-			</li>
+			</li> -->
 			<li>
 				<a
 					href="{base}/company"
