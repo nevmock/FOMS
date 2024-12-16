@@ -14,13 +14,12 @@ const config = {
 				throw new Error(message);
 			}
 		},
-		adapter:
-			process.env.NODE_ENV === 'development'
-				? netlifyAdapter({
-						edge: false,
-						split: false
-					})
-				: autoAdapter(),
+		adapter: process.env.NODE_ENV === 'development'
+			? netlifyAdapter({
+				edge: false,
+				split: false
+			})
+			: autoAdapter(),
 		paths: {
 			base: ''
 		},

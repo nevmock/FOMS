@@ -8,13 +8,16 @@ export async function load({ url }: { url: URL }) {
 		length: length,
 		order: 'desc'
 	});
+	// const response = null;
+	console.info(response)
 
-	if (!response) {
-		throw new Error('Data tidak ditemukan');
-	}
+	// if (!response) {
+	// 	throw new Error('Data tidak ditemukan');
+	// }
 	return {
 		// response: response?.status === 200 ? response?.data?.data : null
 		response: response?.data || null,
+		// response: null,
 		page,
 		length
 	};
