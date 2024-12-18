@@ -9,7 +9,6 @@ export async function load({ url }: { url: URL }) {
 		order: 'desc'
 	});
 	// const response = null;
-	console.info(response)
 
 	// if (!response) {
 	// 	throw new Error('Data tidak ditemukan');
