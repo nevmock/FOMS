@@ -17,7 +17,7 @@
 			"@api/*": ["src/routes/api/*"],
 			"$lib/*": ["src/lib/*"],
 		},
-		"types": ["node", "ts-node"]
+		"types": ["node", "jquery", "ts-node"]
 	},
 	"ts-node": {
 		"esm": true,
