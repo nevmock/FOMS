@@ -15,12 +15,12 @@
 			"@api/*": ["src/routes/api/*"],
 			"$lib/*": ["src/lib/*"],
 		},
-		"types": ["node", "jquery", "ts-node"]
+		"types": ["svelte", "node", "jquery", "ts-node"]
 	},
 	"ts-node": {
 		"esm": true,
 		"transpileOnly": true
 	},
-	"include": ["src/**/*", "static/**/*", "prisma/**/*"],
-	"exclude": ["node_modules", "**/*.spec.ts", "**/*.js"]
+	"include": ["src/**/*", "static/**/*", "prisma/**/*", "vite.config.ts"],
+	"exclude": ["node_modules", "**/*.spec.ts", "**/*.js", ".svelte-kit"]
 }

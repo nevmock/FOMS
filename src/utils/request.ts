@@ -5,19 +5,12 @@ import axios, {
 	type InternalAxiosRequestConfig
 } from 'axios';
 import Cookies from 'js-cookie';
-// import dotenv from 'dotenv';
 
-// dotenv.config();
-
-// console.log(process.env.BASE_URL);
 const request = axios.create({
 	// baseURL: process.env.BASE_URL + `/api/v1`,
 	// baseURL: 'https://dev-foms.netlify.app/api/v1',
 	baseURL: 'http://localhost:5173/api/v1',
 	timeout: 30000
-	// headers: {
-	// 	'Content-Type': 'application/json'
-	// }
 });
 
 const requestHandler = (request: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
@@ -30,19 +23,11 @@ const requestHandler = (request: InternalAxiosRequestConfig): InternalAxiosReque
 	return request;
 };
 
-const responseHandler = (response) => {
+const responseHandler = (response: AxiosResponse) => {
 	return response;
-	// return {
-	// 	code: response.status,
-	// 	status: response.statusText,
-	// 	recordsTotal: 0,
-	// 	data: response.status === 200 || response.status === 201 ? response.data : null,
-	// 	error: response.status === 200 || response.status === 201 ? null : response.data
-	// };
 };
 
 const expiredTokenHandler = () => {
-	// store.dispatch(getLoginData({}))
 	localStorage.clear();
 	Cookies.remove('token');
 	window.location.href = '/auth';
@@ -57,44 +42,15 @@ const expiredTokenHandler = () => {
 	};
 };
 
-const errorHandler = (error) => {
-	// TODO: Remove this code after you got the response information
-	// error.code === 'ERR_NETWORK' should not exist
+const errorHandler = (error: AxiosError) => {
 	if (error.response && error.response?.status === 401) {
 		expiredTokenHandler();
 	} else if (error.code === 'ERR_NETWORK') {
-		// window.history.pushState({}, 'Redirect Network Error', '/auth');
 		if (error.response?.status === 401) {
 			expiredTokenHandler();
 		}
 	}
-
-	// return {
-	// 	code: 401,
-	// 	status: 'Forbidden',
-	// 	recordsTotal: 0,
-	// 	data: null,
-	// 	error: {
-	// 		test: 'test'
-	// 	}
-	// };
-	// return new Response(
-	// 	JSON.stringify({
-	// 		code: 401,
-	// 		status: 'Forbidden',
-	// 		recordsTotal: 0,
-	// 		data: null,
-	// 		error: {
-	// 			test: 'test'
-	// 		}
-	// 	}),
-	// 	{
-	// 		status: 401,
-	// 		headers: {
-	// 			'Content-Type': 'application/json'
-	// 		}
-	// 	}
-	// );
+	return Promise.reject(error);
 };
 
 request.interceptors.request.use(
