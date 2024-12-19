@@ -8,9 +8,12 @@ import Cookies from 'js-cookie';
 
 const request = axios.create({
 	// baseURL: process.env.BASE_URL + `/api/v1`,
-	baseURL: 'https://dev-foms.netlify.app/api/v1',
-	// baseURL: 'http://localhost:5173/api/v1',
-	timeout: 30000
+	// baseURL: 'https://dev-foms.netlify.app/api/v1',
+	baseURL: 'http://localhost:5173/api/v1',
+	timeout: 30000,
+	headers: {
+		'Access-Control-Allow-Origin': '*'
+	}
 });
 
 const requestHandler = (request: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {

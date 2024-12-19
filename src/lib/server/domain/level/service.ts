@@ -101,7 +101,7 @@ class LevelService {
 		};
 	};
 
-	public save = async (payload: levelSchema): Promise<TGetDetail<Level> | null> => {
+	public save = async (payload: any): Promise<TGetDetail<Level> | null> => {
 		try {
 			let records: Level | null = null;
 			if (payload.id && payload.id !== '' && payload.id !== null) {
@@ -122,7 +122,7 @@ class LevelService {
 			}
 
 			return { data: records, recordsTotal: JSON.parse(JSON.stringify(records)).length || 0 };
-		} catch (e: unknown) {
+		} catch (e: any) {
 			throw new OurBaseError(400, 'Bad Request', e.toString());
 		}
 	};

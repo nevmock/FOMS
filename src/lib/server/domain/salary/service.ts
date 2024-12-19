@@ -3,9 +3,10 @@ import type { OurPayload } from '$lib/server/types/request';
 import { OurBaseError } from '$lib/server/core/error';
 import type { ISalaryService } from '$lib/server/interfaces/salaryInterface';
 import type { Salary } from '@prisma/client';
+import type { TGetAll, TGetDetail } from '$lib/server/types/ServiceLayer';
 class SaralryService implements ISalaryService {
 	private DEFAULT_SIZE = 5;
-	public getAll = async (payload: OurPayload): Promise<Array<Salary> | null> => {
+	public getAll = async (payload: OurPayload): Promise<TGetAll<Salary> | null> => {
 		try {
 			const search = payload?.search ? JSON.parse(payload?.search) : null;
 			const results = await prisma.position.findMany({
@@ -53,8 +54,8 @@ class SaralryService implements ISalaryService {
 		}
 	};
 
-	public getDetail = async (id: string): Promise<Salary> => {
-		return await prisma.position.findUnique({
+	public getDetail = async (id: string): Promise<TGetDetail<Salary> | null> => {
+		const records = await prisma.salary.findUnique({
 			where: {
 				id: id
 			}
@@ -63,9 +64,14 @@ class SaralryService implements ISalaryService {
 			// 	positions: true
 			// }
 		});
+
+		return {
+			data: records,
+			recordsTotal: records?.length || 0
+		};
 	};
 
-	public save = async (payload: positionSchema) => {
+	public save = async (payload: any) => {
 		try {
 			if (payload.id && payload.id !== '' && payload.id !== null) {
 				return await prisma.position.update({
@@ -89,7 +95,7 @@ class SaralryService implements ISalaryService {
 					}
 				});
 			}
-		} catch (e: unknown) {
+		} catch (e: any) {
 			throw new OurBaseError(400, 'Bad Request', e.toString());
 		}
 	};

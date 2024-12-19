@@ -39,20 +39,9 @@ export default new Endpoint({ Input, Output }).handle(async (param) => {
 		}
 	});
 
-	// const response =
-	// 	records != null
-	// 		? (Output.parse(composeResponse({ message: 'Create successfully' })) as OurResponse<any>)
-	// 		: (composeResponse({
-	// 				message: 'Create Failed'
-	// 			}) as OurResponse<any>);
-
 	const response = Output.parse(
 		composeResponse({ message: 'Create successfully' })
 	) as OurResponse<any>;
 
-	return new Response(JSON.stringify(response), {
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	}) as z.infer<typeof Output>;
+	return response;;
 });

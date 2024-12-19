@@ -14,7 +14,7 @@ const Output = ZodResponse(companySchema);
 export default new Endpoint({ Query, Output }).handle(async (param, { request }) => {
 	const url = new URL(request.url);
 
-	const payload = await param;
+	const payload = param as OurPayload;
 
 	const queryParams = Object.fromEntries(url.searchParams.entries());
 	// payload.advSearch = queryParams;
@@ -26,10 +26,5 @@ export default new Endpoint({ Query, Output }).handle(async (param, { request })
 			? Output.parse(snakeToCamel(composeResponse(records)))
 			: composeResponse(records);
 
-	return new Response(JSON.stringify(response), {
-		status: 200,
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	}) as z.infer<typeof Output>;
+	return response;
 });

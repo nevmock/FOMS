@@ -3,7 +3,7 @@ import type { Company } from '@prisma/client';
 import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
 import type { TGetAll, TGetDetail } from '$lib/server/types/ServiceLayer';
-class CompanyService implements ICompanyService {
+class CompanyService implements ICompanyService{
 	private DEFAULT_SIZE = 5;
 	public getAll = async (payload: OurPayload): Promise<TGetAll<Company> | null> => {
 		try {
@@ -84,7 +84,7 @@ class CompanyService implements ICompanyService {
 		};
 	};
 
-	public save = async (payload: Company) => {
+	public save = async (payload: any) => {
 		if (payload.id && payload.id !== '' && payload.id !== null) {
 			return await prisma.company.update({
 				where: {

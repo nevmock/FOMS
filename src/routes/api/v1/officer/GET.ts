@@ -12,7 +12,7 @@ const _services = new OfficerService();
 
 const Output = ZodResponse(officerSchema);
 export default new Endpoint({ Query, Output }).handle(async (param) => {
-	const payload = (await param) as OurPayload;
+	const payload = param as OurPayload;
 	const records = await _services.getAll(payload);
 
 	const response =
@@ -20,10 +20,5 @@ export default new Endpoint({ Query, Output }).handle(async (param) => {
 			? Output.parse(snakeToCamel(composeResponse(records)))
 			: composeResponse(records);
 
-	return new Response(JSON.stringify(response), {
-		status: 200,
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	}) as z.infer<typeof Output>;
+	return response;
 });

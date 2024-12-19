@@ -26,10 +26,5 @@ export default new Endpoint({ Query, Output }).handle(async (param, { request })
 			? Output.parse(snakeToCamel(composeResponse(records)))
 			: composeResponse(records);
 
-	return new Response(JSON.stringify(response), {
-		status: 200,
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	});
+	return response;
 });

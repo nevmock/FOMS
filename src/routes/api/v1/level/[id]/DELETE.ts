@@ -22,9 +22,5 @@ export default new Endpoint({ Param, Output }).handle(async (param) => {
 					message: 'Delete Failed'
 				}) as OurResponse<any>);
 
-	return new Response(JSON.stringify(response), {
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	}) as z.infer<typeof Output>;
+	return response;
 });

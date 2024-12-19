@@ -19,9 +19,5 @@ export default new Endpoint({ Input, Output }).handle(async (param) => {
 		composeResponse({ data: { message: 'Create successfully' } })
 	) as OurResponse<any>;
 
-	return new Response(JSON.stringify(response), {
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	}) as z.infer<typeof Output>;
+	return response;
 });

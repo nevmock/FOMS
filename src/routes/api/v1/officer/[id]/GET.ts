@@ -23,10 +23,5 @@ export default new Endpoint({ Param, Output }).handle(async (param) => {
 			? Output.parse(snakeToCamel(composeResponse(records)))
 			: composeResponse(records);
 
-	return new Response(JSON.stringify(response), {
-		status: 200,
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	}) as z.infer<typeof Output>;
+	return response;
 });

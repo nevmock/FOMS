@@ -4,7 +4,7 @@ import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
 import { OurBaseError } from '$lib/server/core/error';
 import { positionSchema } from '$lib/server/schema/position';
-class PositionService implements IPositionService {
+class PositionService {
 	private DEFAULT_SIZE = 5;
 	public getAll = async (payload: OurPayload): Promise<Array<Position> | null> => {
 		try {
@@ -61,7 +61,7 @@ class PositionService implements IPositionService {
 		});
 	};
 
-	public save = async (payload: positionSchema) => {
+	public save = async (payload: any) => {
 		try {
 			if (payload.id && payload.id !== '' && payload.id !== null) {
 				return await prisma.position.update({
@@ -85,7 +85,7 @@ class PositionService implements IPositionService {
 					}
 				});
 			}
-		} catch (e: unknown) {
+		} catch (e: any) {
 			throw new OurBaseError(400, 'Bad Request', e.toString());
 		}
 	};

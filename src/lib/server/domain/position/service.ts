@@ -1,12 +1,10 @@
-import type { IPositionService } from '$lib/server/interfaces/positionInterface';
 import type { Position } from '@prisma/client';
 import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
 import { OurBaseError } from '$lib/server/core/error';
-import { positionSchema } from '$lib/server/schema/position';
 import type { TGetAll } from '$lib/server/types/ServiceLayer';
 import { camelToSnake } from '$lib/server/utils/caseParser';
-class PositionService implements IPositionService {
+class PositionService {
 	private DEFAULT_SIZE = 5;
 	public getAll = async (payload: OurPayload | undefined): Promise<TGetAll<Position> | null> => {
 		try {
@@ -105,7 +103,7 @@ class PositionService implements IPositionService {
 		};
 	};
 
-	public save = async (payload: positionSchema) => {
+	public save = async (payload: any) => {
 		try {
 			if (payload.id && payload.id !== '' && payload.id !== null) {
 				await prisma.position.update({
@@ -125,7 +123,7 @@ class PositionService implements IPositionService {
 					}
 				});
 
-				const newPayload = payload.options.map((v) => {
+				const newPayload = payload.options.map((v: any) => {
 					return {
 						...v,
 						positionId: payload.id
@@ -145,7 +143,7 @@ class PositionService implements IPositionService {
 					}
 				});
 
-				const newPayload = payload.options?.map((v) => {
+				const newPayload = payload.options?.map((v: any) => {
 					return camelToSnake({
 						...v,
 						id: undefined,
@@ -158,7 +156,7 @@ class PositionService implements IPositionService {
 					data: newPayload
 				});
 			}
-		} catch (e: unknown) {
+		} catch (e: any) {
 			throw new OurBaseError(400, 'Bad Request', e.toString());
 		}
 	};

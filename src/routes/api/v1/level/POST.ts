@@ -16,21 +16,10 @@ export default new Endpoint({ Input, Output }).handle(async (param) => {
 
 	const records = await _services.save(payload);
 
-	// const response =
-	// 	records != null
-	// 		? (Output.parse(composeResponse({ message: 'Create successfully' })) as OurResponse<any>)
-	// 		: (composeResponse({
-	// 				message: 'Create Failed'
-	// 			}) as OurResponse<any>);
-
 	const response =
 		records != null
 			? Output.parse(snakeToCamel(composeResponse(records)))
 			: composeResponse(records);
 
-	return new Response(JSON.stringify(response), {
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	}) as z.infer<typeof Output>;
+	return response;
 });

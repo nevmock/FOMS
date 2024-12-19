@@ -1,8 +1,7 @@
-import type { Level, Officer, Position } from '@prisma/client';
+import type { Level, Officer } from '@prisma/client';
 import { prisma } from '$lib/server/prisma';
 import type { OurPayload } from '$lib/server/types/request';
 import { OurBaseError } from '$lib/server/core/error';
-import { officerSchema } from '$lib/server/schema/officer';
 import type { TGetAll, TGetDetail } from '$lib/server/types/ServiceLayer';
 class OfficerService {
 	private DEFAULT_SIZE = 5;
@@ -89,7 +88,7 @@ class OfficerService {
 		};
 	};
 
-	public save = async (payload: officerSchema): TGetDetail<Officer> | null => {
+	public save = async (payload: any): Promise<TGetDetail<Officer> | null> => {
 		try {
 			let records: Level | null = null;
 			if (payload.id && payload.id !== '' && payload.id !== null) {
@@ -110,7 +109,7 @@ class OfficerService {
 			}
 
 			return { data: records, recordsTotal: JSON.parse(JSON.stringify(records)).length || 0 };
-		} catch (e: unknown) {
+		} catch (e: any) {
 			throw new OurBaseError(400, 'Bad Request', e.toString());
 		}
 	};
